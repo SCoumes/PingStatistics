@@ -12,6 +12,7 @@ class PingData:
     pingList : List[Date] # All pings sorted chronologically
     filePath : str
     statsToShow : List[str] 
+    color : str
 
     @classmethod
     def getNew(cls, filePath : str):
@@ -19,6 +20,12 @@ class PingData:
         Create a new PingData object.
         """
         return cls(Date.now(), [], filePath, ["pingNumber", "timeSinceLastPing", "averagePing"])
+    
+    def setColor(self, color : str):
+        """
+        Set the color of the ping stat collector.
+        """
+        self.color = color
 
     def ping(self, date : Date):
         self.pingList.append(date)

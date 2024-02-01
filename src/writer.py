@@ -17,6 +17,10 @@ def getPingDataJson(pingData: PingData) -> str:
     text += "\"pings\": ["
     text += ",".join([f"\"{ping.toText()}\"" for ping in pingData.pingList])
     text += "]"
+    text += ",\"statsToShow\": ["
+    text += ",".join([f"\"{statName}\"" for statName in pingData.statsToShow])
+    text += "]"
+    text += ",\"color\": \"" + pingData.color + "\""
     text += "}"
     return text
 

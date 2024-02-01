@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QCheckBox, QMainWindow, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QCheckBox, QMainWindow, QSpacerItem, QSizePolicy, QColorDialog
 
 if TYPE_CHECKING:
     from src import PingStatsWidget
@@ -33,6 +33,9 @@ class _internalStater(QGroupBox):
 
         self.orderChoice = OrderChoice(self.statsToShow)
 
+        self.colorButton = QPushButton("Color")
+        self.colorButton.clicked.connect(self.openColorDialog)
+
         self.buttonLayout = QHBoxLayout()
         self.saveButton = QPushButton("Save")
         self.saveButton.clicked.connect(self.save)
@@ -43,6 +46,7 @@ class _internalStater(QGroupBox):
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.orderChoice)
+        self.layout.addWidget(self.colorButton)
         self.layout.addLayout(self.buttonLayout)
         self.setLayout(self.layout)
         self.setTitle("Settings")
@@ -62,6 +66,11 @@ class _internalStater(QGroupBox):
         else:
             self.statsToShow.remove(checkbox.option)
         self.orderChoice.updateOptionSet(self.statsToShow)
+
+    def openColorDialog(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.pingStatWidget.changeColor(color.name())
 
 class OptionStatCheckbox(QCheckBox):
     option : str

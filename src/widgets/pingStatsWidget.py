@@ -31,7 +31,7 @@ class PingStatsWidget(QGroupBox):
         self.setLayout(self.outerLayout)
 
         self.setTitle("Ping stater")
-        self.setStyleSheet("PingStatsWidget { border: 1px solid black; }")
+        self.autosetStyleSheet()
 
     def ping(self):
         date = Date.now()
@@ -46,6 +46,14 @@ class PingStatsWidget(QGroupBox):
     def setStatsToShow(self, statsToShow : list[str]):
         self.pingData.setStatsToShow(statsToShow)
         self.rightInfo.redraw()
+
+    def changeColor(self, color : str):
+        self.pingData.setColor(color)
+        self.mainController.getDataController().writePingDatas()
+        self.autosetStyleSheet()
+
+    def autosetStyleSheet(self):
+        self.setStyleSheet("PingStatsWidget { border: 1px solid black; background-color: " + self.pingData.color + "; }")
 
 class _ButtonLeft(QWidget):
     button1 : QPushButton

@@ -15,7 +15,9 @@ def readPingData(fileName: str) -> PingData:
         data = json.load(f)
     begining = Date(data["begining"])
     pings = [Date(ping) for ping in data["pings"]]
-    return PingData(begining, pings, fileName, ["pingNumber", "timeSinceLastPing", "averagePing"])
+    statsToShow = data["statsToShow"]
+    color = data["color"]
+    return PingData(begining, pings, fileName, statsToShow,color)
 
 def readMainFile(fileName : str, dataController : 'DataController'):
     """
