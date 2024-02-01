@@ -31,25 +31,7 @@ class _internalStater(QGroupBox):
 
         self.pingStatWidget.mainController.deactivateMainWindow()
 
-        self.checkBoxes : List[OptionStatCheckbox] = []
-        self.checkbox1 = OptionStatCheckbox("Ping number","pingNumber")
-        self.checkBoxes.append(self.checkbox1)
-
-        self.checkbox2 = OptionStatCheckbox("Time since last ping","timeSinceLastPing")
-        self.checkBoxes.append(self.checkbox2)
-
-        self.checkbox3 = OptionStatCheckbox("Average ping per day","averagePing")
-        self.checkBoxes.append(self.checkbox3)
-        self.checkboxLayout = QVBoxLayout()
-        for checkbox in self.checkBoxes:
-            checkbox.setChecked(checkbox.option in self.pingStatWidget.pingData.getStatsToShow())
-            self.checkboxLayout.addWidget(checkbox)
-            checkbox.stateChanged.connect(lambda state, checkbox=checkbox: self.updateOptionSet(checkbox))
-
-        self.orderChoice = OrderChoice(self.statsToShow, self.readOrderChoice)
-        self.twoColumnsLayout = QHBoxLayout()
-        self.twoColumnsLayout.addLayout(self.checkboxLayout)
-        self.twoColumnsLayout.addWidget(self.orderChoice)
+        self.orderChoice = OrderChoice(self.statsToShow)
 
         self.buttonLayout = QHBoxLayout()
         self.saveButton = QPushButton("Save")
@@ -60,14 +42,14 @@ class _internalStater(QGroupBox):
         self.buttonLayout.addWidget(self.closeButton)
 
         self.layout = QVBoxLayout()
-        self.layout.addLayout(self.twoColumnsLayout)
+        self.layout.addWidget(self.orderChoice)
         self.layout.addLayout(self.buttonLayout)
         self.setLayout(self.layout)
         self.setTitle("Settings")
         self.setStyleSheet("StaterSetting { border: 1px solid black; }")
 
     def save(self):
-        self.pingStatWidget.setStatsToShow(self.statsToShow)
+        self.pingStatWidget.setStatsToShow(self.orderChoice.getOrderedOptions())
 
     def closeEvent(self, event):
         super().closeEvent(event)
@@ -81,9 +63,6 @@ class _internalStater(QGroupBox):
             self.statsToShow.remove(checkbox.option)
         self.orderChoice.updateOptionSet(self.statsToShow)
 
-    def readOrderChoice(self):
-        self.statsToShow = self.orderChoice.getOrderedOptions()
-
 class OptionStatCheckbox(QCheckBox):
     option : str
     def __init__(self, text : str, option : str):
@@ -93,12 +72,12 @@ class OptionStatCheckbox(QCheckBox):
 class OrderChoice(QGroupBox):
     optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day"}
 
-    def __init__(self, statsToShow, updateFunction) -> None:
+    def __init__(self, statsToShow) -> None:
         super().__init__()
 
-        self.setTitle("Order (drag and drop)")
-        self.setStyleSheet("border: 1px solid black;")  # Add black border
-        self.innerOrderChoice = OrderChoice.InnerOrderChoice(statsToShow, updateFunction)
+        self.setTitle("Drag and drop to order")
+        self.setStyleSheet("OrderChoice { border: 1px solid black; }") 
+        self.innerOrderChoice = OrderChoice.InnerOrderChoice(statsToShow)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.innerOrderChoice)
         self.layout.setContentsMargins(0, 10, 0, 0)
@@ -114,27 +93,34 @@ class OrderChoice(QGroupBox):
         return self.innerOrderChoice.getOrderedOptions()
 
     class InnerOrderChoice(OrderList):
+        allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing"]
 
-        def __init__(self, statsToShow, updateFunction) -> None:
-            super().__init__(updateFunction)
+        def __init__(self, statsToShow) -> None:
+            super().__init__(lambda : None)
             self.quickOptions(statsToShow)
 
         def quickOptions(self, statsToShow):
             for option in statsToShow:
-                button = OrderChoice.OptionKnowingDisplay(OrderChoice.optionToDisplayText[option], option)
-                self.addWidgetOption(button)
+                checkBox = OrderChoice.OptionKnowingDisplay(OrderChoice.optionToDisplayText[option], option)
+                checkBox.setChecked(True)
+                self.addWidgetOption(checkBox)
+
+            for option in OrderChoice.InnerOrderChoice.allPossibleOptions:
+                if option not in statsToShow:
+                    checkBox = OrderChoice.OptionKnowingDisplay(OrderChoice.optionToDisplayText[option], option)
+                    self.addWidgetOption(checkBox)
 
         def updateOptionSet(self, statsToShow):
             self.clear()
             self.quickOptions(statsToShow)
 
         def getOrderedOptions(self):
-            buttons : List[OrderChoice.OptionKnowingDisplay] = self.getOptions()
-            return [button.option for button in buttons]
+            checkBoxes : List[OrderChoice.OptionKnowingDisplay] = self.getOptions()
+            return [checkbox.option for checkbox in checkBoxes if checkbox.isChecked()]
     
-    class OptionKnowingDisplay(QLabel):
+    class OptionKnowingDisplay(QCheckBox):
         option : str
         def __init__(self, text : str, option : str):
             super().__init__(text)
             self.option = option
-            self.setStyleSheet("background-color: white; border: 1px solid black;")
+            self.setStyleSheet("background-color: white;")
