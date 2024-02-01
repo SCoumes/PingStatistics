@@ -30,7 +30,7 @@ class PingStatsWidget(QGroupBox):
         self.outerLayout.addLayout(self.layout)
         self.setLayout(self.outerLayout)
 
-        self.setTitle("Ping stater")
+        self.setTitle(pingData.name)
         self.autosetStyleSheet()
 
     def ping(self):

@@ -17,7 +17,8 @@ def readPingData(fileName: str) -> PingData:
     pings = [Date(ping) for ping in data["pings"]]
     statsToShow = data["statsToShow"]
     color = data["color"]
-    return PingData(begining, pings, fileName, statsToShow,color)
+    name = data["name"]
+    return PingData(begining, pings, fileName, statsToShow,color,name)
 
 def readMainFile(fileName : str, dataController : 'DataController'):
     """

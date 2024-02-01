@@ -13,13 +13,14 @@ class PingData:
     filePath : str
     statsToShow : List[str] 
     color : str
+    name : str
 
     @classmethod
     def getNew(cls, filePath : str):
         """
         Create a new PingData object.
         """
-        return cls(Date.now(), [], filePath, ["pingNumber", "timeSinceLastPing", "averagePing"])
+        return cls(Date.now(), [], filePath, ["pingNumber", "timeSinceLastPing", "averagePing"], "#ffffff", "New ping stat collector")
     
     def setColor(self, color : str):
         """
