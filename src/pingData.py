@@ -23,6 +23,12 @@ class PingData:
     def ping(self, date : Date):
         self.pingList.append(date)
 
+    def setStatsToShow(self, statsToShow : List[str]):
+        """
+        Sets the stats to show when presenting the data in a pingStat presenter widget.
+        """
+        self.statsToShow = statsToShow
+
     def getStatsToShow(self) -> List[str]:
         """
         Get the stats to show when presenting the data in a pingStat presenterw widget.
