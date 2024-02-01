@@ -43,3 +43,7 @@ class DataController:
         self.pingDataFilePaths.remove(pingData.filePath)
         self.writeMainFile()
         os.remove(pingData.filePath)
+
+    def changePingDataOrder(self, pingDataFilePaths : List[str]):
+        self.pingDataFilePaths = pingDataFilePaths
+        self.writeMainFile()

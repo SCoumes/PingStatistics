@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, 
 from PyQt6.QtWidgets import QMainWindow, QLabel
 
 from src import PingData, Date
-from src.pingWidgetsPresenter import PingWidgetPresenter
+from src.widgets.pingWidgetsPresenter import PingWidgetPresenter
 
 class MainWindow(QMainWindow):
     pingPresenter : 'PingWidgetPresenter'
@@ -14,9 +14,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Ping stater")
-        self.pingPresenter = PingWidgetPresenter.getPlaceHolder()
         self.addPingStater = QPushButton("Add ping stater", self)
-        self.redrawLayout()
 
     def redrawLayout(self):
         self.layout = QVBoxLayout()

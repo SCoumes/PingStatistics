@@ -2,7 +2,7 @@ from typing import List
 
 from src.controllers import DataController  
 from src import MainWindow
-from src.pingWidgetsPresenter import PingWidgetPresenter
+from src.widgets.pingWidgetsPresenter import PingWidgetPresenter
 from src import PingData
 
 class MainController:

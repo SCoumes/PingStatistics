@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButt
 
 from src.utils import cleanDecimals
 from src import PingData, Date
-from src.staterSetting import StaterSetting
+from src.widgets.staterSetting import StaterSetting
 
 if TYPE_CHECKING:
     from src.controllers import MainController
