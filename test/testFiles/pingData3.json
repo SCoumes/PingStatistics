@@ -1,1 +1,1 @@
-{"begining": "2024-02-01T22:10:19.943204+01:00","pings": [],"statsToShow": ["pingNumber","timeSinceLastPing","averagePing"],"color": "#55ff55","name": "My ping stater"}
+{"begining": "2024-02-01T22:10:19.943204+01:00","pings": [],"statsToShow": ["timeSinceLastPing","pingNumber","averagePing"],"color": "#55ff55","name": "My ping stater"}

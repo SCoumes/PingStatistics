@@ -40,11 +40,16 @@ class _internalStater(QGroupBox):
         self.colorButton = QPushButton("Color")
         self.colorButton.clicked.connect(self.openColorDialog)
 
+        self.deleteButton = QPushButton("Delete")
+        self.deleteButton.clicked.connect(lambda : self.pingStatWidget.mainController.removePingStater(self.pingStatWidget.pingData))
+        self.deleteButton.setStyleSheet("background-color: red;")
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.stateName)
         self.layout.addSpacing(10)
         self.layout.addWidget(self.orderChoice)
         self.layout.addWidget(self.colorButton)
+        self.layout.addWidget(self.deleteButton)
         self.setLayout(self.layout)
         self.setTitle("Settings")
         self.setStyleSheet("StaterSetting { border: 1px solid black; }")
@@ -70,6 +75,7 @@ class _internalStater(QGroupBox):
 
 class OrderChoice(QGroupBox):
     optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day"}
+    allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing"]
 
     def __init__(self, statsToShow, updateFunction) -> None:
         super().__init__()
@@ -92,7 +98,6 @@ class OrderChoice(QGroupBox):
         return self.innerOrderChoice.getOrderedOptions()
 
     class InnerOrderChoice(OrderList):
-        allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing"]
 
         def __init__(self, statsToShow, updateFunction) -> None:
             self.updateFunction = lambda : updateFunction(self.getOrderedOptions())
@@ -102,11 +107,11 @@ class OrderChoice(QGroupBox):
         def quickOptions(self, statsToShow):
             for option in statsToShow:
                 checkBox = OrderChoice.OptionKnowingDisplay(OrderChoice.optionToDisplayText[option], option)
-                checkBox.stateChanged.connect(self.updateFunction) # Note that update function was here is not the argument to InnerOrderChoice's constructor, but is the function passed in said constructor to the super constructor
                 checkBox.setChecked(True)
+                checkBox.stateChanged.connect(self.updateFunction) # Note that update function was here is not the argument to InnerOrderChoice's constructor, but is the function passed in said constructor to the super constructor
                 self.addWidgetOption(checkBox)
 
-            for option in OrderChoice.InnerOrderChoice.allPossibleOptions:
+            for option in OrderChoice.allPossibleOptions:
                 if option not in statsToShow:
                     checkBox = OrderChoice.OptionKnowingDisplay(OrderChoice.optionToDisplayText[option], option)
                     checkBox.stateChanged.connect(self.updateFunction) # Note that update function was here is not the argument to InnerOrderChoice's constructor, but is the function passed in said constructor to the super constructor
