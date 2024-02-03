@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from src import PingStatsWidget
 
 from src.widgets import OrderList
+from PyQt6.QtWidgets import QMessageBox
 
 class StaterSetting(QMainWindow):
     def __init__(self, parent : 'PingStatsWidget'):
@@ -41,7 +42,7 @@ class _internalStater(QGroupBox):
         self.colorButton.clicked.connect(self.openColorDialog)
 
         self.deleteButton = QPushButton("Delete")
-        self.deleteButton.clicked.connect(lambda : self.pingStatWidget.mainController.removePingStater(self.pingStatWidget.pingData))
+        self.deleteButton.clicked.connect(self.deleteWidget)
         self.deleteButton.setStyleSheet("background-color: red;")
 
         self.layout = QVBoxLayout()
@@ -72,6 +73,11 @@ class _internalStater(QGroupBox):
         self.pingStatWidget.pingData.name = self.stateName.text()
         self.pingStatWidget.setTitle(self.stateName.text())
         self.pingStatWidget.mainController.getDataController().writePingDatas()
+
+    def deleteWidget(self):
+        confirm = QMessageBox.question(self, "Confirmation", "Really delete these pings?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirm == QMessageBox.StandardButton.Yes:
+            self.pingStatWidget.mainController.removePingStater(self.pingStatWidget.pingData)
 
 class OrderChoice(QGroupBox):
     optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day"}

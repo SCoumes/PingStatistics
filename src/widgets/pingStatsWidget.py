@@ -35,6 +35,9 @@ class PingStatsWidget(QGroupBox):
         self.setTitle(pingData.name)
         self.autosetStyleSheet()
 
+    def pingNow(self):
+        self.ping()
+
     def ping(self, date = Date.now()):
         self.pingData.ping(date)
         self.rightInfo.recalculate()
@@ -71,7 +74,7 @@ class _ButtonLeft(QWidget):
         self.button2 = QPushButton("Ping at date", self)
         self.button3 = QPushButton("Settings", self)
 
-        self.button1.clicked.connect(parent.ping)
+        self.button1.clicked.connect(parent.pingNow)
         self.button2.clicked.connect(self.openDateSelection)
         self.button3.clicked.connect(parent.openSettings)
 
