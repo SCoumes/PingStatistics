@@ -1,5 +1,5 @@
 from typing import List
-import os
+import os, sys
 import os.path as path
 
 from src.reader import readMainFile, readPingData
@@ -12,7 +12,7 @@ class DataController:
     pingDatas : List[PingData]
 
     def __init__(self) -> None:
-        self.mainFilePath = "test/testFiles/main.json"
+        self.mainFilePath = DataController._getMainFileLocation()
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
         self.pingDatas = [readPingData(FilePath) for FilePath in self.pingDataFilePaths]
 
@@ -52,3 +52,15 @@ class DataController:
     def changePingDataOrder(self, pingDataFilePaths : List[str]):
         self.pingDataFilePaths = pingDataFilePaths
         self.writeMainFile()
+
+    @classmethod
+    def _getMainFileLocation(self):
+        """
+        This is not a getter but instead is used to generate the default location for the main file during initialization.
+        """
+        if getattr(sys, 'frozen', False):
+        # If the application is run as a bundle, the PyInstaller bootloader extends the sys module by a flag frozen=True and sets the app path into variable _MEIPASS'. (Taken from stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile/13790741#13790741)
+            dir_path = sys._MEIPASS
+        else:
+            dir_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        return os.path.join(dir_path, "saves", "main.json")

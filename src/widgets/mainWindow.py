@@ -7,7 +7,6 @@ from PyQt6.QtWidgets import QSizePolicy
 from PyQt6.QtCore import QTimer
 from PyQt6.QtCore import Qt
 
-from src import PingData, Date
 from src.widgets.pingWidgetsPresenter import PingWidgetPresenter
 
 if TYPE_CHECKING:

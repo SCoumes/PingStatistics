@@ -1,3 +1,4 @@
+import os
 import os.path as path
 from src import Date, PingData
 
@@ -25,8 +26,6 @@ def getPingDataJson(pingData: PingData) -> str:
     text += "}"
     return text
 
-import os.path as path
-
 def writeMainFile(filePath: str, pingDataFilePaths: list[str]):
     """
     Write the main file.
@@ -34,3 +33,11 @@ def writeMainFile(filePath: str, pingDataFilePaths: list[str]):
     with open(filePath, "w") as file:
         text = """{ "pingDataFileNames" : [""" + ",".join(["\"" + path.basename(pingDataFilePath) + "\"" for pingDataFilePath in pingDataFilePaths]) + "]}"
         file.write(text)
+
+def initMainFile(filePath: str):
+    """
+    Create a new main file.
+    """
+    os.makedirs(path.dirname(filePath), exist_ok=True)
+    with open(filePath, "w") as file:
+        file.write("{ \"pingDataFileNames\" : []}")
