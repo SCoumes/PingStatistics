@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QDialog, QDialogButtonBox, QDateEdit, QTimeEdit, QGridLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QDialog, QDialogButtonBox, QDateEdit, QTimeEdit, QGridLayout, QSizePolicy
 from PyQt6.QtCore import QDateTime, QTime
 
 from src.utils import cleanDecimals
@@ -144,14 +144,17 @@ class _InfoRight(QWidget):
         self.recalculate()
 
     def getLabelList(self) -> list[QLabel]:
-        labels = []
-        for _ in self.statsToShow:
-            label = QLabel("", self) # Label text will be set later through recalculate()
-            label.setMinimumWidth(150)
-            label.setStyleSheet("background-color: #888888;")
-            labels.append(label)
-        return labels
+        return [_InfoRightLabel(self) for _ in self.statsToShow]
 
     def recalculate(self):
         for statToShow, label in zip(self.statsToShow, self.labels):
             label.setText(" " + self.parent.pingData.getStatText(statToShow) + " ")
+
+class _InfoRightLabel(QLabel):
+    def __init__(self, parent : _InfoRight):
+        super().__init__(parent)
+        self.parent = parent
+        self.setStyleSheet("background-color: #CCCCCC;")
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setMaximumHeight(self.fontMetrics().height() + 10)  # Add some padding
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
