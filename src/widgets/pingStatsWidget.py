@@ -35,8 +35,7 @@ class PingStatsWidget(QGroupBox):
         self.setTitle(pingData.name)
         self.autosetStyleSheet()
 
-    def ping(self):
-        date = Date.now()
+    def ping(self, date = Date.now()):
         self.pingData.ping(date)
         self.rightInfo.recalculate()
         self.mainController.getDataController().writePingDatas()
@@ -60,9 +59,12 @@ class PingStatsWidget(QGroupBox):
 class _ButtonLeft(QWidget):
     button1 : QPushButton
     button2 : QPushButton
+    button3 : QPushButton
+    pingStatWidget : PingStatsWidget
 
     def __init__(self, parent : PingStatsWidget):
         super().__init__(parent)
+        self.pingStatWidget = parent
         self.layout = QVBoxLayout()
 
         self.button1 = QPushButton("Ping now", self)
@@ -110,7 +112,8 @@ class _ButtonLeft(QWidget):
         dialog.setLayout(layout)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             selectedDateTime = dateTimeEdit.dateTime()
-            print(selectedDateTime)
+            selectedDateTime.setTime(QTime(hour_selector.time().hour(), minute_selector.time().minute()))
+            self.pingStatWidget.ping(Date.fromNaive(selectedDateTime.toPyDateTime()))
             # Do something with the selected date and time
 
 class _InfoRight(QWidget):
