@@ -12,6 +12,8 @@ class MainController:
 
     def initApp(self):
         """Performs various operations related to the initialization of the application. Should be called once right after the controller is created."""
+        self.mainWindow.skipRedraw = False
+        self.mainWindow.mainController = self
         self.redraw()
         self.connectAddPingStater()
 
@@ -39,3 +41,6 @@ class MainController:
 
     def activateMainWindow(self):
         self.mainWindow.setEnabled(True)
+
+    def getMainWindowWidth(self) -> int:
+        return self.mainWindow.width()

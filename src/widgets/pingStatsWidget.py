@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QDialog, QDialogButtonBox, QDateEdit, QTimeEdit, QGridLayout, QSizePolicy
 from PyQt6.QtCore import QDateTime, QTime
+from PyQt6.QtGui import QFontMetrics
 
 from src.utils import cleanDecimals
 from src import PingData, Date
@@ -58,6 +59,9 @@ class PingStatsWidget(QGroupBox):
 
     def autosetStyleSheet(self):
         self.setStyleSheet("PingStatsWidget { border: 1px solid black; background-color: " + self.pingData.color + "; }")
+
+    def redraw(self):
+        self.rightInfo.redraw()
 
 class _ButtonLeft(QWidget):
     button1 : QPushButton
@@ -117,7 +121,6 @@ class _ButtonLeft(QWidget):
             selectedDateTime = dateTimeEdit.dateTime()
             selectedDateTime.setTime(QTime(hour_selector.time().hour(), minute_selector.time().minute()))
             self.pingStatWidget.ping(Date.fromNaive(selectedDateTime.toPyDateTime()))
-            # Do something with the selected date and time
 
 class _InfoRight(QWidget):
     parent : PingStatsWidget
@@ -126,22 +129,34 @@ class _InfoRight(QWidget):
 
     def __init__(self, parent : PingStatsWidget):
         super().__init__(parent)
-        self.layout = QHBoxLayout()
+        self.layout = None
         self.parent = parent
         self.redraw()
 
     def redraw(self):
-        if self.layout is not None:
-            # The way to delete a layout is to give it to another widget to which no reference is given
-            deletionWidget = QWidget()
-            deletionWidget.setLayout(self.layout)
-        self.layout = QHBoxLayout()
+        # Need to redraw change resizing window
         self.statsToShow = self.parent.pingData.getStatsToShow()
         self.labels = self.getLabelList()
-        for label in self.labels:
-            self.layout.addWidget(label)
-        self.setLayout(self.layout)
         self.recalculate()
+        if self.layout is not None:
+            deletionWidget = QWidget()
+            deletionWidget.setLayout(self.layout)
+        self.layout = QGridLayout()
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.setLayout(self.layout)
+
+        max_width = self.parent.mainController.getMainWindowWidth() - 100
+        accumulated_width = 0
+        row = 0
+        column = 0
+        for label in self.labels:
+            accumulated_width += label.sizeHint().width()
+            if accumulated_width > max_width:
+                row += 1
+                column = 0
+                accumulated_width = label.sizeHint().width()
+            self.layout.addWidget(label, row, column)
+            column += 1
 
     def getLabelList(self) -> list[QLabel]:
         return [_InfoRightLabel(self) for _ in self.statsToShow]
@@ -155,6 +170,13 @@ class _InfoRightLabel(QLabel):
         super().__init__(parent)
         self.parent = parent
         self.setStyleSheet("background-color: #CCCCCC;")
+
+    def setText(self, text : str):
+        super().setText(text)
+        metrics = QFontMetrics(self.font())
+        text_width = metrics.horizontalAdvance(self.text())
+
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.setMaximumHeight(self.fontMetrics().height() + 10)  # Add some padding
+        self.setMaximumWidth(text_width + 10)  # Add some padding
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
