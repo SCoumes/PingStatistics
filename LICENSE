@@ -1,0 +1,3 @@
+This software source is released under the MIT license. See MIT.txt for the full license text.
+Because this software uses the PyQt6 library without commercial license, its binary executable is released under the GPL3 license. See GPL.txt for the full license text.
+Because this software uses the numpy and soundfile libraries, its binary executable must include the text of the BSD license. See BSD.txt for the full license text, as applied to both numpy and soundifle.

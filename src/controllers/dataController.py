@@ -2,6 +2,7 @@ from typing import List
 import os, sys
 import os.path as path
 
+from PyQt6.QtWidgets import QMessageBox
 from src.reader import readMainFile, readPingData
 from src.writer import writeMainFile, writePingData
 from src import PingData
@@ -59,8 +60,9 @@ class DataController:
         This is not a getter but instead is used to generate the default location for the main file during initialization.
         """
         if getattr(sys, 'frozen', False):
-        # If the application is run as a bundle, the PyInstaller bootloader extends the sys module by a flag frozen=True and sets the app path into variable _MEIPASS'. (Taken from stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile/13790741#13790741)
-            dir_path = sys._MEIPASS
+        # If the application is run as a bundle, the PyInstaller bootloader extends the sys module by a flag frozen=True. (Taken from stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile/13790741#13790741)
+            dir_path = os.path.dirname(os.path.abspath(sys.executable))
+            
         else:
             dir_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         return os.path.join(dir_path, "saves", "main.json")
