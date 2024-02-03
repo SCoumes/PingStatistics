@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QDialog, QDialogButtonBox, QDateEdit, QTimeEdit, QGridLayout, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QDialog, QDialogButtonBox, QDateEdit, QTimeEdit, QGridLayout, QSizePolicy, QDateTimeEdit
 from PyQt6.QtCore import QDateTime, QTime
 from PyQt6.QtGui import QFontMetrics
 
@@ -11,7 +11,6 @@ from src.widgets.staterSetting import StaterSetting
 
 if TYPE_CHECKING:
     from src.controllers import MainController
-from PyQt6.QtWidgets import QDateTimeEdit
 
 class PingStatsWidget(QGroupBox):
     pingData : PingData
@@ -32,6 +31,8 @@ class PingStatsWidget(QGroupBox):
         self.outerLayout = QVBoxLayout()
         self.outerLayout.addLayout(self.layout)
         self.setLayout(self.outerLayout)
+
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         self.setTitle(pingData.name)
         self.autosetStyleSheet()
@@ -145,7 +146,7 @@ class _InfoRight(QWidget):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.setLayout(self.layout)
 
-        max_width = self.parent.mainController.getMainWindowWidth() - 100
+        max_width = self.parent.mainController.getMainWindowWidth() - 250
         accumulated_width = 0
         row = 0
         column = 0
@@ -173,10 +174,10 @@ class _InfoRightLabel(QLabel):
 
     def setText(self, text : str):
         super().setText(text)
-        metrics = QFontMetrics(self.font())
-        text_width = metrics.horizontalAdvance(self.text())
 
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setMaximumHeight(self.fontMetrics().height() + 10)  # Add some padding
-        self.setMaximumWidth(text_width + 10)  # Add some padding
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setMaximumHeight(self.fontMetrics().height() + 10)
+        metrics = QFontMetrics(self.font())
+        text_width = metrics.horizontalAdvance(self.text())
+        self.setMinimumWidth(text_width + 10) 
+        self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)

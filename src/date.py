@@ -27,6 +27,12 @@ class Date:
         @return: The difference between the two dates as a decimal number of days.
         """
         return (self.datetimeObj - other.datetimeObj).total_seconds() / (60 * 60 * 24)
+    
+    def getDayStr(self):
+        """
+        Get the day as a string.
+        """
+        return self.datetimeObj.strftime("%d%m%Y")
 
     @classmethod
     def now(cls):
@@ -51,3 +57,9 @@ class Date:
 
     def __str__(self) -> str:
         return self.toText()
+
+    def __lt__(self, other: 'Date') -> bool:
+        return self.datetimeObj < other.datetimeObj
+    
+    def __eq__(self, other: 'Date') -> bool:
+        return self.datetimeObj == other.datetimeObj

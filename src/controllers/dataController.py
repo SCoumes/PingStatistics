@@ -31,11 +31,16 @@ class DataController:
             writePingData(pingData)
 
     def addNewPingStater(self):
-        FilePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
-        newPingData = PingData.getNew(FilePath)
+        count = len(self.pingDatas)+1
+        filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
+        while filePath in self.pingDataFilePaths:
+            count += 1
+            filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(count) + ".json")
+        filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
+        newPingData = PingData.getNew(filePath)
         self.pingDatas.append(newPingData)
         writePingData(newPingData)
-        self.pingDataFilePaths.append(FilePath)
+        self.pingDataFilePaths.append(filePath)
         self.writeMainFile()
 
     def removePingStater(self, pingData : PingData):

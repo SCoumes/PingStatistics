@@ -80,8 +80,8 @@ class _internalStater(QGroupBox):
             self.pingStatWidget.mainController.removePingStater(self.pingStatWidget.pingData)
 
 class OrderChoice(QGroupBox):
-    optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day"}
-    allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing"]
+    optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day"}
+    allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing", "frequencyInDay", "maxInDay", "medianDay"]
 
     def __init__(self, statsToShow, updateFunction) -> None:
         super().__init__()

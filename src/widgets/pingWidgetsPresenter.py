@@ -19,6 +19,8 @@ class PingWidgetPresenter(OrderList):
             pingWidget = PingStatsWidget(pingData, mainController)
             self.addWidgetOption(pingWidget)
 
+        self.vlayout.addStretch()
+
     def getFilepathOrder(self):
         pingWidgets : List[PingStatsWidget] = self.getOptions()
         return [pingWidget.pingData.filePath for pingWidget in pingWidgets]

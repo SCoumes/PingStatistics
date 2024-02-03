@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple, Union, Optional
 from dataclasses import dataclass
+from collections import Counter
 
 from src.date import Date
 
@@ -30,6 +31,7 @@ class PingData:
 
     def ping(self, date : Date):
         self.pingList.append(date)
+        self.pingList.sort()
 
     def setStatsToShow(self, statsToShow : List[str]):
         """
@@ -47,9 +49,18 @@ class PingData:
         if statName == "pingNumber":
             return "Ping number : " + str(self.getPingNumber())
         if statName == "timeSinceLastPing":
-            return "Time since last ping : " + str(self.getTimeSinceLastPing())
+            days = round(self.getTimeSinceLastPing())
+            hours = round((self.getTimeSinceLastPing() - days) * 24)
+            minutes = round(((self.getTimeSinceLastPing() - days) * 24 - hours) * 60)
+            return "Last ping : " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes"
         if statName == "averagePing":
-            return "Average ping : " + str(self.getAveragePing())
+            return "Pings per day : " + str(round(self.getAveragePing(), 2))
+        if statName == "frequencyInDay":
+            return "Fraction of days with a ping : " + str(round(self.getFrequencyInDay(), 2))
+        if statName == "maxInDay":
+            return "Maximum day : " + str(self.getMaxInDay())
+        if statName == "medianDay":
+            return "Median day : " + str(self.getMedianDay())
         assert False, "Invalid stat name"
     
     def getPingNumber(self):
@@ -71,4 +82,36 @@ class PingData:
         val = self.getPingNumber() / max(Date.now().minus(self.begining), 1)
         return val
     
+    def getFrequencyInDay(self):
+        """
+        Calculate the fraction of days with a ping.
+        """
+        days = len(set([ping.getDayStr() for ping in self.pingList]))
+        days = max(Date.now().minus(self.begining), 1)
+        return self.getPingNumber() / days
+    
+    def _getOrderedPingsInDays(self)->List[int]:
+        """
+        Get a list containing numbers of ping in a day, for all days since the begining.
+        """
+        listOfDays = [ping.getDayStr() for ping in self.pingList]
+        daysCounts = Counter(listOfDays).values()
+        return sorted(daysCounts)
+        #return list(Counter([ping.getDayStr() for ping in self.pingList]).values()).sort()
+
+    def getMaxInDay(self):
+        """
+        Calculate the maximum number of pings in a day.
+        """
+        if len(self._getOrderedPingsInDays()) == 0:
+            return 0
+        return self._getOrderedPingsInDays()[-1]
+    
+    def getMedianDay(self):
+        """
+        Calculate the day with the median number of pings.
+        """
+        if len(self._getOrderedPingsInDays()) == 0:
+            return 0
+        return self._getOrderedPingsInDays()[len(self._getOrderedPingsInDays())//2]
 

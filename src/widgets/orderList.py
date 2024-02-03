@@ -8,10 +8,10 @@ class DraggableContainer(QWidget):
     def __init__(self, content : QWidget, parent: QWidget) -> None:
         super().__init__(parent)
         self.content = content
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(content)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
+        self.vlayout = QVBoxLayout()
+        self.vlayout.addWidget(content)
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.vlayout)
 
     def mouseMoveEvent(self, e : QMouseEvent) -> None:
         if e.buttons() == Qt.MouseButton.LeftButton:
@@ -25,7 +25,9 @@ class DraggableContainer(QWidget):
 class Container(QWidget):
     def __init__(self, updateFunction = None) -> None:
         super().__init__()
-        self.layout: QVBoxLayout = QVBoxLayout(self)
+        self.vlayout = None
+        self.clear()
+        
         self.setAcceptDrops(True)
         self.updateFunction = updateFunction
 
@@ -36,10 +38,10 @@ class Container(QWidget):
         pos: QPoint = e.position()
         widget: QWidget = e.source()
 
-        for i in range(self.layout.count()):
-            w: QWidget = self.layout.itemAt(i).widget()
+        for i in range(self.vlayout.count()):
+            w: QWidget = self.vlayout.itemAt(i).widget()
             if pos.y() < w.y() + w.height() // 2:
-                self.layout.insertWidget(i, widget)
+                self.vlayout.insertWidget(i, widget)
                 break
 
         self.updateFunction()
@@ -47,20 +49,21 @@ class Container(QWidget):
     def addTextOption(self, text : str):
         button: QPushButton = QPushButton(text, self)
         container : DraggableContainer = DraggableContainer(button, self)
-        self.layout.addWidget(container)
+        self.vlayout.addWidget(container)
 
     def addWidgetOption(self, widget : QWidget):
         container : DraggableContainer = DraggableContainer(widget, self)
-        self.layout.addWidget(container)
+        self.vlayout.addWidget(container)
 
     def clear(self):
-        shortLivedWidget = QWidget()
-        shortLivedWidget.setLayout(self.layout)
-        self.layout = QVBoxLayout(self)
+        if self.vlayout is not None:
+            shortLivedWidget = QWidget()
+            shortLivedWidget.setLayout(self.vlayout)
+        self.vlayout = QVBoxLayout(self)
 
     def getOptions(self) -> List[QWidget]:
         optionList = []
-        for i in range(self.layout.count()):
-            container : DraggableContainer = self.layout.itemAt(i).widget()
+        for i in range(self.vlayout.count()):
+            container : DraggableContainer = self.vlayout.itemAt(i).widget()
             optionList.append(container.content)
         return optionList
