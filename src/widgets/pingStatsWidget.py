@@ -130,7 +130,7 @@ class _InfoRight(QWidget):
 
     def __init__(self, parent : PingStatsWidget):
         super().__init__(parent)
-        self.layout = None
+        self.containerLayout = None
         self.parent = parent
         self.redraw()
 
@@ -139,25 +139,25 @@ class _InfoRight(QWidget):
         self.statsToShow = self.parent.pingData.getStatsToShow()
         self.labels = self.getLabelList()
         self.recalculate()
-        if self.layout is not None:
+        if self.containerLayout is not None:
             deletionWidget = QWidget()
-            deletionWidget.setLayout(self.layout)
-        self.layout = QGridLayout()
-        self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        self.setLayout(self.layout)
+            deletionWidget.setLayout(self.containerLayout)
+        self.containerLayout = QVBoxLayout()
+        self.setLayout(self.containerLayout)
 
         max_width = self.parent.mainController.getMainWindowWidth() - 250
         accumulated_width = 0
-        row = 0
-        column = 0
+        lineLayout = QHBoxLayout()
+        lineLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.containerLayout.addLayout(lineLayout)
         for label in self.labels:
             accumulated_width += label.sizeHint().width()
             if accumulated_width > max_width:
-                row += 1
-                column = 0
+                lineLayout = QHBoxLayout()
+                lineLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+                self.containerLayout.addLayout(lineLayout)
                 accumulated_width = label.sizeHint().width()
-            self.layout.addWidget(label, row, column)
-            column += 1
+            lineLayout.addWidget(label)
 
     def getLabelList(self) -> list[QLabel]:
         return [_InfoRightLabel(self) for _ in self.statsToShow]
