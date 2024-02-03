@@ -1,10 +1,11 @@
 from typing import List, TYPE_CHECKING
 
 from time import sleep
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget, QPushButton, QScrollArea
 from PyQt6.QtWidgets import QMainWindow, QLabel
 from PyQt6.QtWidgets import QSizePolicy
 from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import Qt
 
 from src import PingData, Date
 from src.widgets.pingWidgetsPresenter import PingWidgetPresenter
@@ -39,10 +40,15 @@ class MainWindow(QMainWindow):
         self.mainController.redraw()
         
     def redrawLayout(self):
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.pingPresenter)
-        self.layout.addWidget(self.addPingStater)
+        self.vlayout = QVBoxLayout()
         self.containerWidget = QWidget()
-        self.containerWidget.setLayout(self.layout)
-        self.setCentralWidget(self.containerWidget)
+        self.containerWidget.setLayout(self.vlayout)
+        self.vlayout.addWidget(self.pingPresenter)
+        self.vlayout.addWidget(self.addPingStater)
+        scrollArea = QScrollArea()
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scrollArea.setWidget(self.containerWidget)
+        self.setCentralWidget(scrollArea)
 
