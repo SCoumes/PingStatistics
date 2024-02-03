@@ -28,10 +28,9 @@ class MainWindow(QMainWindow):
         self.resizeTimer = QTimer()
         self.resizeTimer.setSingleShot(True)
         self.resizeTimer.timeout.connect(self.onResizeDone)
-        self.resize(800, 600)  # Set default size here
+        self.resize(800, 600)  
     
     def resizeEvent(self, event):
-        # Call the base class method
         super().resizeEvent(event)
         if not self.skipRedraw:
             self.resizeTimer.start(100)
