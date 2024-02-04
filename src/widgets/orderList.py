@@ -65,5 +65,6 @@ class Container(QWidget):
         optionList = []
         for i in range(self.vlayout.count()):
             container : DraggableContainer = self.vlayout.itemAt(i).widget()
-            optionList.append(container.content)
+            if container is not None:
+                optionList.append(container.content)
         return optionList
