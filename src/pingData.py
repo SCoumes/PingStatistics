@@ -94,9 +94,12 @@ class PingData:
         """
         Get a list containing numbers of ping in a day, for all days since the begining.
         """
-        listOfDays = [ping.getDayStr() for ping in self.pingList]
-        daysCounts = Counter(listOfDays).values()
-        return sorted(daysCounts)
+        begin = self.begining
+        end = max(Date.now(), max(self.pingList, default=begin))
+        days = [0] * (int(end.minus(begin)) + 1)
+        for ping in self.pingList:
+            days[int(ping.minus(begin))] += 1
+        return days
         #return list(Counter([ping.getDayStr() for ping in self.pingList]).values()).sort()
 
     def getMaxInDay(self):
