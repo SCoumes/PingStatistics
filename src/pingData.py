@@ -99,7 +99,7 @@ class PingData:
         days = [0] * (int(end.minus(begin)) + 1)
         for ping in self.pingList:
             days[int(ping.minus(begin))] += 1
-        return days
+        return sorted(days)
         #return list(Counter([ping.getDayStr() for ping in self.pingList]).values()).sort()
 
     def getMaxInDay(self):

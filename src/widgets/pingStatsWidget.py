@@ -12,6 +12,7 @@ from src.widgets import TimeSelector
 
 if TYPE_CHECKING:
     from src.controllers import MainController
+from PyQt6.QtWidgets import QMessageBox
 
 class PingStatsWidget(QGroupBox):
     pingData : PingData
@@ -39,9 +40,15 @@ class PingStatsWidget(QGroupBox):
         self.autosetStyleSheet()
 
     def pingNow(self):
-        self.ping()
+        self.ping(Date.now())
 
-    def ping(self, date = Date.now()):
+    def ping(self, date):
+        if date < self.pingData.begining:
+            confirm = QMessageBox.question(self, "Confirmation", "This ping is older than the begining. Update begining to match the ping?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
+            if confirm == QMessageBox.StandardButton.Yes:
+                self.pingData.begining = date
+            else :
+                return
         self.pingData.ping(date)
         self.rightInfo.recalculate()
         self.mainController.getDataController().writePingDatas()

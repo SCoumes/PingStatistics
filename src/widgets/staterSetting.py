@@ -23,6 +23,7 @@ class StaterSetting(QMainWindow):
 class _internalStater(QGroupBox):
     pingStatWidget : 'PingStatsWidget'
     statsToShow : List[str]
+    settingWidget : StaterSetting
 
     def __init__(self, pingStatWidget : 'PingStatsWidget', settingWidget : StaterSetting):
         super().__init__()
@@ -78,6 +79,7 @@ class _internalStater(QGroupBox):
         confirm = QMessageBox.question(self, "Confirmation", "Really delete these pings?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if confirm == QMessageBox.StandardButton.Yes:
             self.pingStatWidget.mainController.removePingStater(self.pingStatWidget.pingData)
+            self.settingWidget.close()
 
 class OrderChoice(QGroupBox):
     optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day"}

@@ -37,18 +37,18 @@ class DataController:
         while filePath in self.pingDataFilePaths:
             count += 1
             filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(count) + ".json")
-        filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
+
         newPingData = PingData.getNew(filePath)
         self.pingDatas.append(newPingData)
-        writePingData(newPingData)
         self.pingDataFilePaths.append(filePath)
+        writePingData(newPingData)
         self.writeMainFile()
 
     def removePingStater(self, pingData : PingData):
         self.pingDatas.remove(pingData)
         self.pingDataFilePaths.remove(pingData.filePath)
         self.writeMainFile()
-        os.remove(pingData.filePath)
+        # os.remove(pingData.filePath)
 
     def changePingDataOrder(self, pingDataFilePaths : List[str]):
         self.pingDataFilePaths = pingDataFilePaths
