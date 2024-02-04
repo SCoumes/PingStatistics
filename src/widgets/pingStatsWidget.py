@@ -8,6 +8,7 @@ from PyQt6.QtGui import QFontMetrics
 from src.utils import cleanDecimals
 from src import PingData, Date
 from src.widgets.staterSetting import StaterSetting
+from src.widgets import TimeSelector
 
 if TYPE_CHECKING:
     from src.controllers import MainController
@@ -91,37 +92,7 @@ class _ButtonLeft(QWidget):
         self.setLayout(self.layout)
 
     def openDateSelection(self):
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Select date and time")
-        
-        # Add time selection option
-        hour_selector = QTimeEdit(self)
-        hour_selector.setTime(QTime.currentTime())
-        hour_selector.setDisplayFormat("HH")
-
-        minute_selector = QTimeEdit(self)
-        minute_selector.setTime(QTime.currentTime())
-        minute_selector.setDisplayFormat("mm")
-
-        dateTimeEdit = QDateTimeEdit()
-        dateTimeEdit.setDisplayFormat("dd/MM/yyyy")
-        dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-        dateTimeEdit.setCalendarPopup(True)
-        
-        buttonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        buttonBox.accepted.connect(dialog.accept)
-        buttonBox.rejected.connect(dialog.reject)
-
-        layout = QGridLayout()
-        layout.addWidget(dateTimeEdit, 0, 0, 1, 2)
-        layout.addWidget(hour_selector, 1, 0, 1, 1)
-        layout.addWidget(minute_selector, 1, 1, 1, 1)
-        layout.addWidget(buttonBox, 2, 0, 1, 2)
-        dialog.setLayout(layout)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            selectedDateTime = dateTimeEdit.dateTime()
-            selectedDateTime.setTime(QTime(hour_selector.time().hour(), minute_selector.time().minute()))
-            self.pingStatWidget.ping(Date.fromNaive(selectedDateTime.toPyDateTime()))
+        self.timeSelector = TimeSelector(self.pingStatWidget.ping)
 
 class _InfoRight(QWidget):
     parent : PingStatsWidget
