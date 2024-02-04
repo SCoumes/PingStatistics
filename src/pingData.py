@@ -1,4 +1,5 @@
 from typing import List, Dict, Tuple, Union, Optional
+from math import floor
 from dataclasses import dataclass
 from collections import Counter
 
@@ -49,9 +50,10 @@ class PingData:
         if statName == "pingNumber":
             return "Ping number : " + str(self.getPingNumber())
         if statName == "timeSinceLastPing":
-            days = round(self.getTimeSinceLastPing())
-            hours = round((self.getTimeSinceLastPing() - days) * 24)
-            minutes = round(((self.getTimeSinceLastPing() - days) * 24 - hours) * 60)
+            timeSinceLastPing = self.getTimeSinceLastPing()
+            days = floor(timeSinceLastPing)
+            hours = floor((timeSinceLastPing - days) * 24)
+            minutes = floor(((timeSinceLastPing - days) * 24 - hours) * 60)
             return "Last ping : " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes"
         if statName == "averagePing":
             return "Pings per day : " + str(round(self.getAveragePing(), 2))
