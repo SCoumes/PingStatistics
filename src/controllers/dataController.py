@@ -52,6 +52,13 @@ class DataController:
 
     def changePingDataOrder(self, pingDataFilePaths : List[str]):
         self.pingDataFilePaths = pingDataFilePaths
+        pingDatas = []
+        for filePath in pingDataFilePaths:
+            for pingData in self.pingDatas:
+                if pingData.filePath == filePath:
+                    pingDatas.append(pingData)
+                    break
+        self.pingDatas = pingDatas
         self.writeMainFile()
 
     @classmethod
