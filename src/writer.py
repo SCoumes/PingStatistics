@@ -2,6 +2,19 @@ import os
 import os.path as path
 from src import Date, PingData
 
+def writeSettingsFile(filePath: str, mainFilePath: str, width: int, height: int):
+    """
+    Write the settings file.
+    """
+    os.makedirs(path.dirname(filePath), exist_ok=True)
+    with open(filePath, "w") as file:
+        text = "{"
+        text += f"\"mainFilePath\": \"{mainFilePath}\","
+        text += f"\"width\": {width},"
+        text += f"\"height\": {height}"
+        text += "}"
+        file.write(text)
+
 def writePingData(pingData: PingData):
     """
     Write the ping data to a file.

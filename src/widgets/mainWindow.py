@@ -27,7 +27,6 @@ class MainWindow(QMainWindow):
         self.resizeTimer = QTimer()
         self.resizeTimer.setSingleShot(True)
         self.resizeTimer.timeout.connect(self.onResizeDone)
-        self.resize(800, 600)  
     
     def resizeEvent(self, event):
         super().resizeEvent(event)

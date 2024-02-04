@@ -3,19 +3,29 @@ import os, sys
 import os.path as path
 
 from PyQt6.QtWidgets import QMessageBox
-from src.reader import readMainFile, readPingData
-from src.writer import writeMainFile, writePingData
+from src.reader import readMainFile, readPingData, readSettingsFile
+from src.writer import writeMainFile, writePingData, writeSettingsFile
 from src import PingData
 
 class DataController:
+    settingPath : str
+    width : int
+    height : int
     mainFilePath : str
     pingDataFilePaths : List[str] # This is a list complete paths, not just file names.
     pingDatas : List[PingData]
 
     def __init__(self) -> None:
-        self.mainFilePath = DataController._getMainFileLocation()
+        self.settingPath = DataController._getSettingFileLocation()
+        readSettingsFile(self.settingPath, self)
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
         self.pingDatas = [readPingData(FilePath) for FilePath in self.pingDataFilePaths]
+
+    def getWidth(self):
+        return self.width
+    
+    def getHeight(self):
+        return self.height
 
     def getPingDatas(self):
         return self.pingDatas
@@ -23,6 +33,9 @@ class DataController:
     def writeAllData(self):
         self.writeMainFile()
         self.writePingDatas()
+
+    def writeSettingsFile(self):
+        writeSettingsFile(self.settingPath, self.mainFilePath, self.width, self.height)
 
     def writeMainFile(self):
         writeMainFile(self.mainFilePath, self.pingDataFilePaths)
@@ -62,7 +75,7 @@ class DataController:
         self.writeMainFile()
 
     @classmethod
-    def _getMainFileLocation(self):
+    def _getSettingFileLocation(self):
         """
         This is not a getter but instead is used to generate the default location for the main file during initialization.
         """
@@ -72,4 +85,4 @@ class DataController:
             
         else:
             dir_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-        return os.path.join(dir_path, "saves", "main.json")
+        return os.path.join(dir_path, "settings.json")

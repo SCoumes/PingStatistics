@@ -14,6 +14,7 @@ class MainController:
         """Performs various operations related to the initialization of the application. Should be called once right after the controller is created."""
         self.mainWindow.skipRedraw = False
         self.mainWindow.mainController = self
+        self.mainWindow.resize(self.dataController.getWidth(), self.dataController.getHeight())
         self.redraw()
         self.connectAddPingStater()
 
