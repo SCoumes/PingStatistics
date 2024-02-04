@@ -163,3 +163,4 @@ cython_debug/
 
 saves
 saves/*
+**/__pycache__/
