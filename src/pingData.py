@@ -48,7 +48,7 @@ class PingData:
     
     def getStatText(self, statName : str) -> str:
         if statName == "pingNumber":
-            return "Ping number : " + str(self.getPingNumber())
+            return "Pings : " + str(self.getPingNumber())
         if statName == "timeSinceLastPing":
             timeSinceLastPing = self.getTimeSinceLastPing()
             days = floor(timeSinceLastPing)
@@ -63,6 +63,8 @@ class PingData:
             return "Maximum day : " + str(self.getMaxInDay())
         if statName == "medianDay":
             return "Median day : " + str(self.getMedianDay())
+        if statName == "last30days":
+            return "Pings in the last 30 days : " + str(self.getLast30days())
         assert False, "Invalid stat name"
     
     def getPingNumber(self):
@@ -119,4 +121,10 @@ class PingData:
         if len(self._getOrderedPingsInDays()) == 0:
             return 0
         return self._getOrderedPingsInDays()[len(self._getOrderedPingsInDays())//2]
+    
+    def getLast30days(self):
+        """
+        Get the number of pings in the last 30 days.
+        """
+        return len([ping for ping in self.pingList if Date.now().minus(ping) < 30])
 

@@ -82,8 +82,8 @@ class _internalStater(QGroupBox):
             self.settingWidget.close()
 
 class OrderChoice(QGroupBox):
-    optionToDisplayText = {"pingNumber" : "Ping number", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day"}
-    allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing", "frequencyInDay", "maxInDay", "medianDay"]
+    optionToDisplayText = {"pingNumber" : "Total number of pings", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day", "last30days" : "Pings in the last 30 days"}
+    allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing", "frequencyInDay", "maxInDay", "medianDay", "last30days"]
 
     def __init__(self, statsToShow, updateFunction) -> None:
         super().__init__()
