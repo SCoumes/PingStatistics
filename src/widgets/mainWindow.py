@@ -1,4 +1,5 @@
 from typing import List, TYPE_CHECKING
+import os
 
 from time import sleep
 from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget, QPushButton, QScrollArea
@@ -24,7 +25,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         toolbar = QToolBar(self)
         self.addToolBar(toolbar)
-        self.addPingStater = toolbar.addAction("Add ping stater")
+        self.addPingStaterButton = toolbar.addAction("Add ping stater")
+        self.addPingStaterButton.triggered.connect(self.addPingStater)
+        self.openSaveDir = toolbar.addAction("Choose save directory")
+        self.openSaveDir.triggered.connect(self.chooseSaveDir)
         self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self.skipRedraw = True
         self.resizeTimer = QTimer()
@@ -50,4 +54,15 @@ class MainWindow(QMainWindow):
         scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scrollArea.setWidget(self.containerWidget)
         self.setCentralWidget(scrollArea)
+
+    def addPingStater(self):
+        self.mainController.addPingStater()
+
+    def chooseSaveDir(self):
+        """Open a dialog to choose the save directory."""
+        dirChoice = QFileDialog(self)
+        dirChoice.setFileMode(QFileDialog.FileMode.Directory)
+        dir = dirChoice.getExistingDirectory(self, "Choose save directory", "")
+        if dir:
+            self.mainController.changeSaveLocation(os.path.join(dir,"settinfs.json"))
 

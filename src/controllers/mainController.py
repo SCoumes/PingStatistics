@@ -16,7 +16,13 @@ class MainController:
         self.mainWindow.mainController = self
         self.mainWindow.resize(self.dataController.getWidth(), self.dataController.getHeight())
         self.redraw()
-        self.mainWindow.addPingStater.triggered.connect(self.addPingStater)
+
+    def changeSaveLocation(self, newLocation : str):
+        """Change the location where the data is saved."""
+        self.dataController.mainFilePath = newLocation
+        self.dataController.writeSettingsFile()
+        self.dataController.initValues()
+        self.redraw()
 
     def getDataController(self) -> DataController:
         return self.dataController

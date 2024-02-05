@@ -16,6 +16,9 @@ class DataController:
     pingDatas : List[PingData]
 
     def __init__(self) -> None:
+        self.initValues()
+
+    def initValues(self):
         self.settingPath = DataController._getSettingFileLocation()
         readSettingsFile(self.settingPath, self)
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
