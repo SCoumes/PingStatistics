@@ -16,7 +16,7 @@ class MainController:
         self.mainWindow.mainController = self
         self.mainWindow.resize(self.dataController.getWidth(), self.dataController.getHeight())
         self.redraw()
-        self.connectAddPingStater()
+        self.mainWindow.addPingStater.triggered.connect(self.addPingStater)
 
     def getDataController(self) -> DataController:
         return self.dataController
@@ -29,9 +29,6 @@ class MainController:
         """Add a new ping stater to the list of ping staters."""
         self.dataController.addNewPingStater()
         self.redraw()
-
-    def connectAddPingStater(self):
-        self.mainWindow.addPingStater.clicked.connect(self.addPingStater)
 
     def removePingStater(self, pingData : PingData):
         self.dataController.removePingStater(pingData)
