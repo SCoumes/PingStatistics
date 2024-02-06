@@ -1,5 +1,7 @@
 import os
 import os.path as path
+import json
+
 from src import Date, PingData
 
 def writeSettingsFile(filePath: str, mainFilePath: str | None, width: int, height: int):
@@ -21,9 +23,9 @@ def writePingData(pingData: PingData):
     Write the ping data to a file.
     """
     with open(pingData.filePath, "w") as file:
-        file.write(getPingDataJson(pingData))
+        file.write(_getPingDataJson(pingData))
 
-def getPingDataJson(pingData: PingData) -> str:
+def _getPingDataJson(pingData: PingData) -> str:
     """
     Get the json text for the ping data.
     """
@@ -37,6 +39,7 @@ def getPingDataJson(pingData: PingData) -> str:
     text += "]"
     text += ",\"color\": \"" + pingData.color + "\""
     text += ",\"name\": \"" + pingData.name + "\""
+    text += ",\"transitiveTowards\": " + json.dumps(pingData.transitivity)
     text += "}"
     return text
 

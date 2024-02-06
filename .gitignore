@@ -165,3 +165,4 @@ settings.json
 saves
 saves/*
 **/__pycache__/
+test/testFiles/*

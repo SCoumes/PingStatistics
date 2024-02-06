@@ -19,7 +19,12 @@ def readPingData(fileName: str) -> PingData:
     statsToShow = data["statsToShow"]
     color = data["color"]
     name = data["name"]
-    return PingData(begining, pings, fileName, statsToShow,color,name)
+    if "transitiveTowards" in data:
+        transitivity = data["transitiveTowards"]
+    else :
+        transitivity = None
+
+    return PingData(begining, pings, fileName, statsToShow, color, name, transitivity)
 
 def readMainFile(fileName : str | None, dataController : 'DataController'):
     """
