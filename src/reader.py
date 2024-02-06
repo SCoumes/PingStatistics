@@ -8,11 +8,12 @@ from src.writer import initMainFile
 if TYPE_CHECKING:
     from src.controllers import DataController
 
-def readPingData(fileName: str) -> PingData:
+def readPingData(dirName : str, fileName: str) -> PingData:
     """
     Read a ping data from a file.
     """
-    with open(fileName, "r") as f:
+    filePath = path.join(dirName, fileName)
+    with open(filePath, "r") as f:
         data = json.load(f)
     begining = Date(data["begining"])
     pings = [Date(ping) for ping in data["pings"]]
@@ -31,15 +32,14 @@ def readMainFile(fileName : str | None, dataController : 'DataController'):
     Read a the file from a file and updates the dataController with necessary information. Does not directly read the ping data.
     """
     if fileName == None:
-        dataController.pingDataFilePaths = []
+        dataController.pingDataFileNames = []
         return
     if not path.exists(fileName):
         initMainFile(fileName)
-    dirname = path.dirname(fileName)
     with open(fileName, "r") as f:
         data = json.load(f)
-    pingDataFileNames : List[str] = [path.join(dirname,fileName) for fileName in data["pingDataFileNames"]]
-    dataController.pingDataFilePaths = pingDataFileNames
+    pingDataFileNames : List[str] = data["pingDataFileNames"] 
+    dataController.pingDataFileNames = pingDataFileNames
 
 def readSettingsFile(fileName : str, dataController : 'DataController'):
     """

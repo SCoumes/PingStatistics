@@ -12,8 +12,8 @@ class DataController:
     width : int
     height : int
     mainFilePath : Optional[str] # None when a mainfile was never selected.
-    pingDataFilePaths : List[str] # This is a list complete paths, not just file names.
-    pingDatas : List[PingData]
+    pingDatasDict : dict[str, PingData] # keys are the filenames of the pingDatas
+    pingDataFileNames : List[str] # Decides the order of the corresponding widgets
 
     def __init__(self) -> None:
         self.settingPath = DataController._getSettingFileLocation()
@@ -22,7 +22,10 @@ class DataController:
 
     def initValues(self):
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
-        self.pingDatas = [readPingData(FilePath) for FilePath in self.pingDataFilePaths]
+        dirname = path.dirname(self.mainFilePath)
+        self.pingDatasDict = {}
+        for fileName in self.pingDataFileNames:
+            self.pingDatasDict[fileName] = readPingData(dirname, fileName)
 
     def changeSaveLocation(self, newLocation : str):
         self.mainFilePath = newLocation
@@ -38,7 +41,7 @@ class DataController:
         self.writeSettingsFile()
     
     def getPingDatas(self):
-        return self.pingDatas
+        return self.pingDatasDict.values()
     
     def writeAllData(self):
         self.writeSettingsFile()
@@ -49,43 +52,35 @@ class DataController:
         writeSettingsFile(self.settingPath, self.mainFilePath, self.width, self.height)
 
     def writeMainFile(self):
-        writeMainFile(self.mainFilePath, self.pingDataFilePaths)
+        writeMainFile(self.mainFilePath, self.pingDatasDict.keys())
     
     def writePingDatas(self):
-        for pingData in self.pingDatas:
-            writePingData(pingData)
+        dirName = path.dirname(self.mainFilePath)
+        for pingData in self.pingDatasDict.values():
+            writePingData(dirName, pingData)
 
     def addNewPingStater(self):
         if self.mainFilePath == None:
             QMessageBox.critical(None, "Error", "No save location selected. Please select a save location before adding a ping stater.")
             return
-        count = len(self.pingDatas)+1
-        filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
-        while filePath in self.pingDataFilePaths:
+        count = len(self.pingDatasDict)+1
+        fileName =  "pingData" + str(count) + ".json"
+        while fileName in self.pingDataFileNames:
             count += 1
-            filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(count) + ".json")
+            fileName = "pingData" + str(count) + ".json"
 
-        newPingData = PingData.getNew(filePath)
-        self.pingDatas.append(newPingData)
-        self.pingDataFilePaths.append(filePath)
+        newPingData = PingData.getNew(fileName)
+        self.pingDatasDict[fileName] = newPingData
+        self.pingDataFileNames.append(fileName)
         writePingData(newPingData)
         self.writeMainFile()
 
     def removePingStater(self, pingData : PingData):
-        self.pingDatas.remove(pingData)
-        self.pingDataFilePaths.remove(pingData.filePath)
+        self.pingDatasDict.pop(pingData.fileName)
         self.writeMainFile()
-        # os.remove(pingData.filePath)
 
-    def changePingDataOrder(self, pingDataFilePaths : List[str]):
-        self.pingDataFilePaths = pingDataFilePaths
-        pingDatas = []
-        for filePath in pingDataFilePaths:
-            for pingData in self.pingDatas:
-                if pingData.filePath == filePath:
-                    pingDatas.append(pingData)
-                    break
-        self.pingDatas = pingDatas
+    def changePingDataOrder(self, pingDataFileNames : List[str]):
+        self.pingDataFileNames = pingDataFileNames
         self.writeMainFile()
 
     @classmethod

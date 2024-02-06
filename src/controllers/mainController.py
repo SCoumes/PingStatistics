@@ -53,12 +53,12 @@ class MainController:
         """
         Register a ping and handles all necessary consequences
         """
-        correspDict : Dict[str, PingStatsWidget] = self.mainWindow.pingPresenter.getPingsWidgets()
+        fileNamesToWidget : Dict[str, PingStatsWidget] = self.mainWindow.pingPresenter.getPingsWidgets()
         updated = []
         toUpdate : PingData = pingData
         while toUpdate != None and toUpdate not in updated:
             toUpdate.ping(date)
-            correspDict[toUpdate.filePath].rightInfo.recalculate()
+            fileNamesToWidget[toUpdate.fileName].rightInfo.recalculate()
             updated.append(toUpdate)
             toUpdate = toUpdate.transitivity
         self.dataController.writePingDatas()

@@ -18,11 +18,12 @@ def writeSettingsFile(filePath: str, mainFilePath: str | None, width: int, heigh
         text += "}"
         file.write(text)
 
-def writePingData(pingData: PingData):
+def writePingData(dirname : str, pingData: PingData):
     """
     Write the ping data to a file.
     """
-    with open(pingData.filePath, "w") as file:
+    filePath = path.join(dirname, pingData.fileName)
+    with open(filePath, "w") as file:
         file.write(_getPingDataJson(pingData))
 
 def _getPingDataJson(pingData: PingData) -> str:
@@ -43,12 +44,12 @@ def _getPingDataJson(pingData: PingData) -> str:
     text += "}"
     return text
 
-def writeMainFile(filePath: str, pingDataFilePaths: list[str]):
+def writeMainFile(filePath: str, pingDataFileNames: list[str]):
     """
     Write the main file.
     """
     with open(filePath, "w") as file:
-        text = """{ "pingDataFileNames" : [""" + ",".join(["\"" + path.basename(pingDataFilePath) + "\"" for pingDataFilePath in pingDataFilePaths]) + "]}"
+        text = """{ "pingDataFileNames" : [""" + ",".join(["\"" + pingDataFileName + "\"" for pingDataFileName in pingDataFileNames]) + "]}"
         file.write(text)
 
 def initMainFile(filePath: str):

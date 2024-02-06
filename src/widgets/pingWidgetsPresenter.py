@@ -22,14 +22,14 @@ class PingWidgetPresenter(OrderList):
 
         for pingData in self.pingDatas:
             pingWidget = PingStatsWidget(pingData, mainController)
-            self.pingsWidgets[pingData.filePath] = pingWidget
+            self.pingsWidgets[pingData.fileName] = pingWidget
             self.addWidgetOption(pingWidget)
 
         self.vlayout.addStretch()
 
     def getFilepathOrder(self):
         pingWidgets : List[PingStatsWidget] = self.getOptions()
-        return [pingWidget.pingData.filePath for pingWidget in pingWidgets]
+        return [pingWidget.pingData.fileName for pingWidget in pingWidgets]
     
     def getPingsWidgets(self) -> Dict[PingData, PingStatsWidget]:
         return self.pingsWidgets
