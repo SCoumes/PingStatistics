@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Dict
 
 from src.controllers import DataController  
 from src import MainWindow
+from src.widgets import PingStatsWidget
 from src.widgets.pingWidgetsPresenter import PingWidgetPresenter
 from src import PingData
 
@@ -47,3 +48,17 @@ class MainController:
 
     def getMainWindowWidth(self) -> int:
         return self.mainWindow.width()
+    
+    def ping(self, date, pingData : PingData):
+        """
+        Register a ping and handles all necessary consequences
+        """
+        correspDict : Dict[str, PingStatsWidget] = self.mainWindow.pingPresenter.getPingsWidgets()
+        updated = []
+        toUpdate : PingData = pingData
+        while toUpdate != None and toUpdate not in updated:
+            toUpdate.ping(date)
+            correspDict[toUpdate.filePath].rightInfo.recalculate()
+            updated.append(toUpdate)
+            toUpdate = toUpdate.transitivity
+        self.dataController.writePingDatas()

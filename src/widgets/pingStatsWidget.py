@@ -49,9 +49,7 @@ class PingStatsWidget(QGroupBox):
                 self.pingData.begining = date
             else :
                 return
-        self.pingData.ping(date)
-        self.rightInfo.recalculate()
-        self.mainController.getDataController().writePingDatas()
+        self.mainController.ping(date, self.pingData)
 
     def openSettings(self):
         self.settings = StaterSetting(self)
