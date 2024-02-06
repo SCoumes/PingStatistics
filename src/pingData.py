@@ -172,7 +172,7 @@ class PingData:
             return 0
         if len(daysNumberPings) < 30:
             return sorted(daysNumberPings)[len(daysNumberPings)//2]
-        return sorted(daysNumberPings[-30:])[len(daysNumberPings)//2]
+        return sorted(daysNumberPings[-30:])[15]
     
     def _getPings30days(self):
         """
