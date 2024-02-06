@@ -75,7 +75,7 @@ class DataController:
         newPingData = PingData.getNew(fileName)
         self.pingDatasDict[fileName] = newPingData
         self.pingDataFileNames.append(fileName)
-        writePingData(newPingData)
+        writePingData(path.dirname(self.mainFilePath), newPingData)
         self.writeMainFile()
 
     def removePingStater(self, pingData : PingData):
