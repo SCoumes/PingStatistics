@@ -35,7 +35,6 @@ def readMainFile(fileName : str | None, dataController : 'DataController'):
         data = json.load(f)
     pingDataFileNames : List[str] = [path.join(dirname,fileName) for fileName in data["pingDataFileNames"]]
     dataController.pingDataFilePaths = pingDataFileNames
-    
 
 def readSettingsFile(fileName : str, dataController : 'DataController'):
     """

@@ -2,14 +2,15 @@ import os
 import os.path as path
 from src import Date, PingData
 
-def writeSettingsFile(filePath: str, mainFilePath: str, width: int, height: int):
+def writeSettingsFile(filePath: str, mainFilePath: str | None, width: int, height: int):
     """
     Write the settings file.
     """
     os.makedirs(path.dirname(filePath), exist_ok=True)
     with open(filePath, "w") as file:
         text = "{"
-        text += f"\"mainFilePath\": \"{mainFilePath.replace("\\","\\\\")}\","
+        if mainFilePath != None:
+            text += f"\"mainFilePath\": \"{mainFilePath.replace("\\","\\\\")}\","
         text += f"\"width\": {width},"
         text += f"\"height\": {height}"
         text += "}"
