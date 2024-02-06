@@ -48,14 +48,14 @@ class PingData:
         return self.statsToShow
     
     def getStatText(self, statName : str) -> str:
-        if statName == "pingNumber":
-            return "Pings : " + str(self.getPingNumber())
         if statName == "timeSinceLastPing":
             timeSinceLastPing = self.getTimeSinceLastPing()
             days = floor(timeSinceLastPing)
             hours = floor((timeSinceLastPing - days) * 24)
             minutes = floor(((timeSinceLastPing - days) * 24 - hours) * 60)
             return "Last ping : " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes"
+        if statName == "pingNumber":
+            return "Pings : " + str(self.getPingNumber())
         if statName == "averagePing":
             return "Pings per day : " + str(round(self.getAveragePing(), 2))
         if statName == "frequencyInDay":
@@ -66,10 +66,15 @@ class PingData:
             return "Median day : " + str(self.getMedianDay())
         if statName == "last30days":
             return "Pings in the last 30 days : " + str(self.getLast30days())
+        if statName == "averagePing30days":
+            return "Pings per day in the last 30 days : " + str(round(self.getAveragePing30days(), 2))
+        if statName == "frequencyInDay30days":
+            return "Fraction of days with a ping in the last 30 days : " + str(round(self.getFrequencyInDay30days(), 2))
+        if statName == "maxInDay30days":
+            return "Maximum day in the last 30 days : " + str(self.getMaxInDay30days())
+        if statName == "medianDay30days":
+            return "Median day in the last 30 days : " + str(self.getMedianDay30days())
         assert False, "Invalid stat name"
-    
-    def getPingNumber(self):
-        return len(self.pingList)
     
     def getTimeSinceLastPing(self) -> float:
         """
@@ -80,12 +85,27 @@ class PingData:
             return 0.0
         return Date.now().minus(self.pingList[-1])
 
+    def getPingNumber(self):
+        return len(self.pingList)
+ 
+    def getLast30days(self):
+        """
+        Get the number of pings in the last 30 days.
+        """
+        return len([ping for ping in self.pingList if Date.now().minus(ping) < 30])
+
     def getAveragePing(self):
         """
         Calculate the average number of pings per day.
         """
         val = self.getPingNumber() / max(Date.now().minus(self.begining), 1)
         return val
+    
+    def getAveragePing30days(self):
+        """
+        Calculate the average number of pings in the last 30 days.
+        """
+        return self.getLast30days() / 30
     
     def getFrequencyInDay(self):
         """
@@ -94,6 +114,13 @@ class PingData:
         days = len(set([ping.getDayStr() for ping in self.pingList]))
         days = max(Date.now().minus(self.begining), 1)
         return self.getPingNumber() / days
+    
+    def getFrequencyInDay30days(self):
+        """
+        Calculate the fraction of days with a ping in the last 30 days.
+        """
+        days = len(set([ping.getDayStr() for ping in self._getPings30days()]))
+        return days/30
     
     def _getOrderedPingsInDays(self)->List[int]:
         """
@@ -104,28 +131,52 @@ class PingData:
         days = [0] * (int(end.minus(begin)) + 1)
         for ping in self.pingList:
             days[int(ping.minus(begin))] += 1
-        return sorted(days)
+        return days
         #return list(Counter([ping.getDayStr() for ping in self.pingList]).values()).sort()
 
     def getMaxInDay(self):
         """
         Calculate the maximum number of pings in a day.
         """
-        if len(self._getOrderedPingsInDays()) == 0:
+        daysNumberPings = self._getOrderedPingsInDays()
+        if len(daysNumberPings) == 0:
             return 0
-        return self._getOrderedPingsInDays()[-1]
+        return sorted(daysNumberPings)[-1]
+    
+    def getMaxInDay30days(self):
+        """
+        Calculate the maximum number of pings in a day in the last 30 days.
+        """
+        daysNumberPings = self._getOrderedPingsInDays()
+        if len(daysNumberPings) == 0:
+            return 0
+        if len(daysNumberPings) < 30:
+            return sorted(daysNumberPings)[-1]
+        return sorted(daysNumberPings[-30:])[-1]
     
     def getMedianDay(self):
         """
         Calculate the day with the median number of pings.
         """
-        if len(self._getOrderedPingsInDays()) == 0:
+        daysNumberPings = self._getOrderedPingsInDays()
+        if len(daysNumberPings) == 0:
             return 0
-        return self._getOrderedPingsInDays()[len(self._getOrderedPingsInDays())//2]
+        return sorted(daysNumberPings)[len(daysNumberPings)//2]
+
+    def getMedianDay30days(self):
+        """
+        Calculate the day with the median number of pings in the last 30 days.
+        """
+        daysNumberPings = self._getOrderedPingsInDays()
+        if len(daysNumberPings) == 0:
+            return 0
+        if len(daysNumberPings) < 30:
+            return sorted(daysNumberPings)[len(daysNumberPings)//2]
+        return sorted(daysNumberPings[-30:])[len(daysNumberPings)//2]
     
-    def getLast30days(self):
+    def _getPings30days(self):
         """
-        Get the number of pings in the last 30 days.
+        Get the pings in the last 30 days.
         """
-        return len([ping for ping in self.pingList if Date.now().minus(ping) < 30])
+        return [ping for ping in self.pingList if Date.now().minus(ping) < 30]
 
