@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import os, sys
 import os.path as path
 
@@ -11,18 +11,23 @@ class DataController:
     settingPath : str
     width : int
     height : int
-    mainFilePath : str
+    mainFilePath : Optional[str] # None when a mainfile was never selected.
     pingDataFilePaths : List[str] # This is a list complete paths, not just file names.
     pingDatas : List[PingData]
 
     def __init__(self) -> None:
+        self.settingPath = DataController._getSettingFileLocation()
+        readSettingsFile(self.settingPath, self)
         self.initValues()
 
     def initValues(self):
-        self.settingPath = DataController._getSettingFileLocation()
-        readSettingsFile(self.settingPath, self)
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
         self.pingDatas = [readPingData(FilePath) for FilePath in self.pingDataFilePaths]
+
+    def changeSaveLocation(self, newLocation : str):
+        self.mainFilePath = newLocation
+        self.initValues()
+        self.writeAllData()
 
     def getWidth(self):
         return self.width
@@ -34,6 +39,7 @@ class DataController:
         return self.pingDatas
     
     def writeAllData(self):
+        self.writeSettingsFile()
         self.writeMainFile()
         self.writePingDatas()
 
@@ -48,6 +54,9 @@ class DataController:
             writePingData(pingData)
 
     def addNewPingStater(self):
+        if self.mainFilePath == None:
+            QMessageBox.critical(None, "Error", "No save location selected. Please select a save location before adding a ping stater.")
+            return
         count = len(self.pingDatas)+1
         filePath = path.join(path.dirname(self.mainFilePath), "pingData" + str(len(self.pingDatas)+1) + ".json")
         while filePath in self.pingDataFilePaths:

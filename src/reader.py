@@ -38,8 +38,18 @@ def readSettingsFile(fileName : str, dataController : 'DataController'):
     """
     Read the settings file.
     """
-    with open(fileName, "r") as f:
-        data = json.load(f)
-    dataController.mainFilePath = data["mainFilePath"]
+    try:
+        with open(fileName, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        # Return default values, a setting file should be created when the user chooses a save location.
+        dataController.width = 800
+        dataController.height = 600
+        dataController.mainFilePath = None
+        return
+    try : 
+        dataController.mainFilePath = data["mainFilePath"]
+    except KeyError:
+        dataController.mainFilePath = None
     dataController.width = data["width"]
     dataController.height = data["height"]

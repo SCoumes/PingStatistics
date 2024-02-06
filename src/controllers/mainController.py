@@ -19,9 +19,8 @@ class MainController:
 
     def changeSaveLocation(self, newLocation : str):
         """Change the location where the data is saved."""
-        self.dataController.mainFilePath = newLocation
-        self.dataController.writeSettingsFile()
-        self.dataController.initValues()
+        print(newLocation)
+        self.dataController.changeSaveLocation(newLocation)
         self.redraw()
 
     def getDataController(self) -> DataController:

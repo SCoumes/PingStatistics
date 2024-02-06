@@ -64,5 +64,5 @@ class MainWindow(QMainWindow):
         dirChoice.setFileMode(QFileDialog.FileMode.Directory)
         dir = dirChoice.getExistingDirectory(self, "Choose save directory", "")
         if dir:
-            self.mainController.changeSaveLocation(os.path.join(dir,"settinfs.json"))
+            self.mainController.changeSaveLocation(os.path.join(dir,"main.json"))
 
