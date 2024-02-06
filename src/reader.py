@@ -1,4 +1,4 @@
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Optional
 import json
 import os.path as path
 
@@ -21,10 +21,13 @@ def readPingData(fileName: str) -> PingData:
     name = data["name"]
     return PingData(begining, pings, fileName, statsToShow,color,name)
 
-def readMainFile(fileName : str, dataController : 'DataController'):
+def readMainFile(fileName : str | None, dataController : 'DataController'):
     """
     Read a the file from a file and updates the dataController with necessary information. Does not directly read the ping data.
     """
+    if fileName == None:
+        dataController.pingDataFilePaths = []
+        return
     if not path.exists(fileName):
         initMainFile(fileName)
     dirname = path.dirname(fileName)

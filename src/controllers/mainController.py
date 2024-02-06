@@ -14,12 +14,12 @@ class MainController:
         """Performs various operations related to the initialization of the application. Should be called once right after the controller is created."""
         self.mainWindow.skipRedraw = False
         self.mainWindow.mainController = self
-        self.mainWindow.resize(self.dataController.getWidth(), self.dataController.getHeight())
+        width, height = self.dataController.getDimensions()
+        self.mainWindow.resize(width, height)
         self.redraw()
 
     def changeSaveLocation(self, newLocation : str):
         """Change the location where the data is saved."""
-        print(newLocation)
         self.dataController.changeSaveLocation(newLocation)
         self.redraw()
 

@@ -29,12 +29,14 @@ class DataController:
         self.initValues()
         self.writeAllData()
 
-    def getWidth(self):
-        return self.width
+    def getDimensions(self):
+        return self.width, self.height
     
-    def getHeight(self):
-        return self.height
-
+    def changeDimensions(self, width : int, height : int):
+        self.width = width
+        self.height = height
+        self.writeSettingsFile()
+    
     def getPingDatas(self):
         return self.pingDatas
     

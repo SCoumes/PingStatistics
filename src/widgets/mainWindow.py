@@ -41,6 +41,7 @@ class MainWindow(QMainWindow):
             self.resizeTimer.start(100)
 
     def onResizeDone(self):
+        self.mainController.getDataController().changeDimensions(self.width(), self.height())
         self.mainController.redraw()
         
     def redrawLayout(self):
@@ -64,5 +65,6 @@ class MainWindow(QMainWindow):
         dirChoice.setFileMode(QFileDialog.FileMode.Directory)
         dir = dirChoice.getExistingDirectory(self, "Choose save directory", "")
         if dir:
-            self.mainController.changeSaveLocation(os.path.join(dir,"main.json"))
+            dirText = os.path.normpath(dir)
+            self.mainController.changeSaveLocation(os.path.join(dirText,"main.json"))
 

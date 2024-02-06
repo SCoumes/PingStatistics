@@ -9,7 +9,7 @@ def writeSettingsFile(filePath: str, mainFilePath: str, width: int, height: int)
     os.makedirs(path.dirname(filePath), exist_ok=True)
     with open(filePath, "w") as file:
         text = "{"
-        text += f"\"mainFilePath\": \"{mainFilePath}\","
+        text += f"\"mainFilePath\": \"{mainFilePath.replace("\\","\\\\")}\","
         text += f"\"width\": {width},"
         text += f"\"height\": {height}"
         text += "}"
