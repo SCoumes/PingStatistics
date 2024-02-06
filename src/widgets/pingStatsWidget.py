@@ -44,11 +44,8 @@ class PingStatsWidget(QGroupBox):
 
     def ping(self, date):
         if date < self.pingData.begining:
-            confirm = QMessageBox.question(self, "Confirmation", "This ping is older than the begining. Update begining to match the ping?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
-            if confirm == QMessageBox.StandardButton.Yes:
-                self.pingData.begining = date
-            else :
-                return
+            confirm = QMessageBox.question(self, "Confirmation", "This ping is older than the begining. The begining will be updated. Continue?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel)
+            if confirm == QMessageBox.StandardButton.No: return
         self.mainController.ping(date, self.pingData)
 
     def openSettings(self):

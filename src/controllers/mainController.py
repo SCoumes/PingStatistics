@@ -64,6 +64,6 @@ class MainController:
             if toUpdate.transitivity in fileNameToPingData:
                 toUpdate = fileNameToPingData[toUpdate.transitivity]
             else:
-                toUpdate = None
                 toUpdate.transitivity = None # We detected a dangling reference to a pingData that does not exist, remove it now
+                toUpdate = None
         self.dataController.writePingDatas()

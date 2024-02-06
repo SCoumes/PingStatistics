@@ -32,6 +32,8 @@ class PingData:
         self.color = color
 
     def ping(self, date : Date):
+        if date < self.begining:
+            self.begining = date
         self.pingList.append(date)
         self.pingList.sort()
 
