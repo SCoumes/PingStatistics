@@ -54,11 +54,16 @@ class MainController:
         Register a ping and handles all necessary consequences
         """
         fileNamesToWidget : Dict[str, PingStatsWidget] = self.mainWindow.pingPresenter.getPingsWidgets()
+        fileNameToPingData : Dict[str, PingData] = self.dataController.getPingDataDict()
         updated = []
         toUpdate : PingData = pingData
         while toUpdate != None and toUpdate not in updated:
             toUpdate.ping(date)
             fileNamesToWidget[toUpdate.fileName].rightInfo.recalculate()
             updated.append(toUpdate)
-            toUpdate = toUpdate.transitivity
+            if toUpdate.transitivity in fileNameToPingData:
+                toUpdate = fileNameToPingData[toUpdate.transitivity]
+            else:
+                toUpdate = None
+                toUpdate.transitivity = None # We detected a dangling reference to a pingData that does not exist, remove it now
         self.dataController.writePingDatas()

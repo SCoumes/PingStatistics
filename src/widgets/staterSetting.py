@@ -2,12 +2,12 @@ from typing import TYPE_CHECKING, List
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCloseEvent
-from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QCheckBox, QMainWindow, QSpacerItem, QSizePolicy, QColorDialog, QLineEdit
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QGroupBox, QCheckBox, QMainWindow, QSpacerItem, QSizePolicy, QColorDialog, QLineEdit, QListWidget, QListWidgetItem
 
 if TYPE_CHECKING:
     from src import PingStatsWidget
 
-from src.widgets import OrderList
+from src.widgets import OrderList, TransitivitySelector
 from PyQt6.QtWidgets import QMessageBox
 
 class StaterSetting(QMainWindow):
@@ -42,6 +42,8 @@ class _internalStater(QGroupBox):
         self.colorButton = QPushButton("Color")
         self.colorButton.clicked.connect(self.openColorDialog)
 
+        self.transitivitySelector = TransitivitySelector(self.pingStatWidget.mainController, self.pingStatWidget)
+
         self.deleteButton = QPushButton("Delete")
         self.deleteButton.clicked.connect(self.deleteWidget)
         self.deleteButton.setStyleSheet("background-color: red;")
@@ -50,6 +52,7 @@ class _internalStater(QGroupBox):
         self.layout.addWidget(self.stateName)
         self.layout.addSpacing(10)
         self.layout.addWidget(self.orderChoice)
+        self.layout.addWidget(self.transitivitySelector)
         self.layout.addWidget(self.colorButton)
         self.layout.addWidget(self.deleteButton)
         self.setLayout(self.layout)

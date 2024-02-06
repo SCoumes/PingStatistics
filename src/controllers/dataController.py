@@ -35,6 +35,9 @@ class DataController:
     def getDimensions(self):
         return self.width, self.height
     
+    def getPingDataDict(self):
+        return self.pingDatasDict
+    
     def changeDimensions(self, width : int, height : int):
         self.width = width
         self.height = height
@@ -82,6 +85,10 @@ class DataController:
     def changePingDataOrder(self, pingDataFileNames : List[str]):
         self.pingDataFileNames = pingDataFileNames
         self.writeMainFile()
+
+    def changePingDataTransitivity(self, pingData : PingData, transitivity : Optional[str]):
+        pingData.transitivity = transitivity
+        self.writePingDatas()
 
     @classmethod
     def _getSettingFileLocation(self):
