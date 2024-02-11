@@ -7,7 +7,7 @@ from src.controllers import MainController
 
 def main():
     app = QApplication(sys.argv)
-    app_icon = QIcon("icon.png")
+    app_icon = QIcon("pingstats.png")
     app.setWindowIcon(app_icon)
 
     window = MainWindow()
