@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Pingstats
+Comment=Ping statter
+Exec=~/.local/share/pingstats/pingstats
+Icon=pingstats
+Terminal=false

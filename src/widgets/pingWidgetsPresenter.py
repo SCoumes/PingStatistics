@@ -25,6 +25,8 @@ class PingWidgetPresenter(OrderList):
             self.pingsWidgets[pingData.fileName] = pingWidget
             self.addWidgetOption(pingWidget)
 
+        self.setStyleSheet("color: black;")
+
         self.vlayout.addStretch()
 
     def getFilepathOrder(self):

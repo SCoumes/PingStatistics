@@ -12,7 +12,7 @@ def writeSettingsFile(filePath: str, mainFilePath: str | None, width: int, heigh
     with open(filePath, "w") as file:
         text = "{"
         if mainFilePath != None:
-            text += f"\"mainFilePath\": \"{mainFilePath.replace("\\","\\\\")}\","
+            text += "\"mainFilePath\": \"" + mainFilePath.replace("\\","\\\\") + "\","
         text += f"\"width\": {width},"
         text += f"\"height\": {height}"
         text += "}"

@@ -85,8 +85,8 @@ class _internalStater(QGroupBox):
             self.settingWidget.close()
 
 class OrderChoice(QGroupBox):
-    optionToDisplayText = {"pingNumber" : "Total number of pings", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day", "last30days" : "Pings in the last 30 days", "averagePing30days" : "Average pings per day in the last 30 days", "frequencyInDay30days" : "Fraction of days with one or more pings in the last 30 days", "maxInDay30days" : "Maximum pings in a day in the last 30 days", "medianDay30days" : "Median pings per day in the last 30 days"}
     allPossibleOptions = ["pingNumber", "timeSinceLastPing", "averagePing", "frequencyInDay", "maxInDay", "medianDay", "last30days", "averagePing30days", "frequencyInDay30days", "maxInDay30days", "medianDay30days"]
+    optionToDisplayText = {"pingNumber" : "Total number of pings", "timeSinceLastPing" : "Time since last ping", "averagePing" : "Average ping per day", "frequencyInDay" : "Fraction of days with one or more pings", "maxInDay" : "Maximum pings in a day", "medianDay" : "Median pings per day", "last30days" : "Pings in the last 30 days", "averagePing30days" : "Average pings per day in the last 30 days", "frequencyInDay30days" : "Fraction of days with one or more pings in the last 30 days", "maxInDay30days" : "Maximum pings in a day in the last 30 days", "medianDay30days" : "Median pings per day in the last 30 days"}
 
     def __init__(self, statsToShow, updateFunction) -> None:
         super().__init__()
@@ -141,4 +141,4 @@ class OrderChoice(QGroupBox):
         def __init__(self, text : str, option : str):
             super().__init__(text)
             self.option = option
-            self.setStyleSheet("background-color: white;")
+            self.setStyleSheet("background-color: white; color: black;")

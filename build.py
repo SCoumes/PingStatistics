@@ -13,8 +13,7 @@ if platform.system() == "Windows":
         "main.py",
         "--onefile",
         "--noconsole",
-        "--name",
-        "PingStater",
+        "--name", "PingStater",
         "--icon=icon.ico"
     ])
     # Create a zip file containing the executable and other relevant files for the windows build
@@ -35,8 +34,8 @@ elif platform.system() == "Linux":
         "main.py",
         "--onefile",
         "--noconsole",
-        "--name",
-        "PingStater",
+        "--name", "PingStater",
+        "--hidden-import", "PyQt6", # No clue why this is needed, but it is. The import is present at the top of multiples files in the code
     ])
     # Create a tarball file containing the executable and other relevant files for the linux build
     os.makedirs(linux_build_dir)

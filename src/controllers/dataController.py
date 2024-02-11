@@ -22,8 +22,9 @@ class DataController:
 
     def initValues(self):
         readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
-        dirname = path.dirname(self.mainFilePath)
         self.pingDatasDict = {}
+        if self.mainFilePath is None: return
+        dirname = path.dirname(self.mainFilePath)
         for fileName in self.pingDataFileNames:
             self.pingDatasDict[fileName] = readPingData(dirname, fileName)
 
