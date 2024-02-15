@@ -21,6 +21,9 @@ On windows
 python main.py
 ```
 
+## Build executable from source
+Simply run the python script "build.py"."
+
 # Some information on configuration.
 You can display different statistics about a given ping stats series by checking the proper boxes. Drag and drop the boxes to change the order of the corresponding displays.
 You can also change the order of the ping stat series by drag and drop (from the main view, not the "setting" window).
