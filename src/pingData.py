@@ -50,6 +50,11 @@ class PingData:
         return self.statsToShow
     
     def getStatText(self, statName : str) -> str:
+        """
+        Compute and format the text to display to the user for a given stat.
+        @param statName : The string identifier for the stat to get the text for.
+        @return : The text to display to the user for the stat.
+        """
         if statName == "timeSinceLastPing":
             timeSinceLastPing = self.getTimeSinceLastPing()
             days = floor(timeSinceLastPing)

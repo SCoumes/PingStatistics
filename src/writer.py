@@ -54,7 +54,7 @@ def writeMainFile(filePath: str, pingDataFileNames: list[str]):
 
 def initMainFile(filePath: str):
     """
-    Create a new main file.
+    Create a new main file with no pingdata.
     """
     os.makedirs(path.dirname(filePath), exist_ok=True)
     with open(filePath, "w") as file:

@@ -10,7 +10,10 @@ if TYPE_CHECKING:
 
 def readPingData(dirName : str, fileName: str) -> PingData:
     """
-    Read a ping data from a file.
+    Read a ping data from a file and return a PingData object. No side effect.
+    @param dirName : The directory where the file is located.
+    @param fileName : The name of the file to read.
+    @return : A PingData object with the information from the file.
     """
     filePath = path.join(dirName, fileName)
     with open(filePath, "r") as f:
@@ -29,7 +32,9 @@ def readPingData(dirName : str, fileName: str) -> PingData:
 
 def readMainFile(fileName : str | None, dataController : 'DataController'):
     """
-    Read a the file from a file and updates the dataController with necessary information. Does not directly read the ping data.
+    Read the saves mainfile and updates the dataController with necessary information. Does not directly read the ping data.
+    @param fileName : The path to the file to read. If none, the dataController will be updated with an empty list of pingDataFileNames.
+    @param dataController : The dataController to update.
     """
     if fileName == None:
         dataController.pingDataFileNames = []
@@ -43,7 +48,9 @@ def readMainFile(fileName : str | None, dataController : 'DataController'):
 
 def readSettingsFile(fileName : str, dataController : 'DataController'):
     """
-    Read the settings file.
+    Read the settings file and update the passed dataController.
+    @param fileName : The path to the file to read.
+    @param dataController : The dataController to update.
     """
     try:
         with open(fileName, "r") as f:
