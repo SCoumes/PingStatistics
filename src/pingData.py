@@ -118,9 +118,9 @@ class PingData:
         """
         Calculate the fraction of days with a ping.
         """
-        days = len(set([ping.getDayStr() for ping in self.pingList]))
+        pingDays = len(set([ping.getDayStr() for ping in self.pingList]))
         days = max(Date.now().minus(self.begining), 1)
-        return self.getPingNumber() / days
+        return pingDays / days
     
     def getFrequencyInDay30days(self):
         """
