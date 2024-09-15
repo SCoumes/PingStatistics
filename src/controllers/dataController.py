@@ -56,7 +56,7 @@ class DataController:
         writeSettingsFile(self.settingPath, self.mainFilePath, self.width, self.height)
 
     def writeMainFile(self):
-        writeMainFile(self.mainFilePath, self.pingDatasDict.keys())
+        writeMainFile(self.mainFilePath, self.pingDataFileNames)
     
     def writePingDatas(self):
         dirName = path.dirname(self.mainFilePath)

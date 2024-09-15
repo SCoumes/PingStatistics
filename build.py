@@ -3,9 +3,11 @@ import shutil
 import os
 import platform
 
+version_numer = "1.1"
+
 # Build on windows
 if platform.system() == "Windows":
-    windows_build_dir = os.path.join("dist","Pingstats_v1.0_windows")
+    windows_build_dir = os.path.join("dist",f"Pingstats_v{version_numer}_windows")
     if os.path.exists(windows_build_dir):
         shutil.rmtree(windows_build_dir)
     # Run PyInstaller to create the executable
@@ -26,7 +28,7 @@ if platform.system() == "Windows":
 
 # Build on linux
 elif platform.system() == "Linux":
-    linux_build_dir = os.path.join("dist","Pingstats_v1.0_linux")
+    linux_build_dir = os.path.join("dist",f"Pingstats_v{version_numer}_linux")
     if os.path.exists(linux_build_dir):
         shutil.rmtree(linux_build_dir)
     # Run PyInstaller to create the executable
