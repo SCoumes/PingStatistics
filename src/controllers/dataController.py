@@ -81,6 +81,7 @@ class DataController:
 
     def removePingStater(self, pingData : PingData):
         self.pingDatasDict.pop(pingData.fileName)
+        self.pingDataFileNames.remove(pingData.fileName)
         self.writeMainFile()
 
     def changePingDataOrder(self, pingDataFileNames : List[str]):

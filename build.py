@@ -3,7 +3,7 @@ import shutil
 import os
 import platform
 
-version_numer = "1.1"
+version_numer = "1.2"
 
 # Build on windows
 if platform.system() == "Windows":
