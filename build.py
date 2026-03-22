@@ -37,7 +37,7 @@ elif platform.system() == "Linux":
         "--onefile",
         "--noconsole",
         "--name", "Pingstats",
-        "--hidden-import", "PyQt6", # No clue why this is needed, but it is. The import is present at the top of multiples files in the code
+        "--collect-all", "PyQt6", # No clue why this is needed, but it is. The import is present at the top of multiples files in the code
     ])
     # Create a tarball file containing the executable and other relevant files for the linux build
     os.makedirs(linux_build_dir)
