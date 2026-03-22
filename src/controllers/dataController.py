@@ -13,7 +13,9 @@ class DataController:
     height : int
     mainFilePath : Optional[str] # None when a mainfile was never selected.
     pingDatasDict : dict[str, PingData] # keys are the filenames of the pingDatas
-    pingDataFileNames : List[str] # Decides the order of the corresponding widgets
+    pingDataFileNames : List[str] # Decides the order of the corresponding widgets; in two-column mode: left column items first, then right column items
+    twoColumns : bool
+    leftColumnCount : int # Number of items in the left column when twoColumns is True
 
     def __init__(self) -> None:
         self.settingPath = DataController._getSettingFileLocation()
@@ -21,7 +23,7 @@ class DataController:
         self.initValues()
 
     def initValues(self):
-        readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute.
+        readMainFile(self.mainFilePath, self) # This has side effects and will define the pingDataFilePaths attribute and twoColumns.
         self.pingDatasDict = {}
         if self.mainFilePath is None: return
         dirname = path.dirname(self.mainFilePath)
@@ -45,7 +47,7 @@ class DataController:
         self.writeSettingsFile()
     
     def getPingDatas(self):
-        return self.pingDatasDict.values()
+        return [self.pingDatasDict[f] for f in self.pingDataFileNames if f in self.pingDatasDict]
     
     def writeAllData(self):
         self.writeSettingsFile()
@@ -56,7 +58,12 @@ class DataController:
         writeSettingsFile(self.settingPath, self.mainFilePath, self.width, self.height)
 
     def writeMainFile(self):
-        writeMainFile(self.mainFilePath, self.pingDataFileNames)
+        writeMainFile(self.mainFilePath, self.pingDataFileNames, self.twoColumns, self.leftColumnCount)
+
+    def toggleTwoColumns(self):
+        self.twoColumns = not self.twoColumns
+        if self.mainFilePath is not None:
+            self.writeMainFile()
     
     def writePingDatas(self):
         dirName = path.dirname(self.mainFilePath)
@@ -76,16 +83,26 @@ class DataController:
         newPingData = PingData.getNew(fileName)
         self.pingDatasDict[fileName] = newPingData
         self.pingDataFileNames.append(fileName)
+        # In two-column mode new items go to the right column (after leftColumnCount items)
         writePingData(path.dirname(self.mainFilePath), newPingData)
         self.writeMainFile()
 
     def removePingStater(self, pingData : PingData):
+        idx = self.pingDataFileNames.index(pingData.fileName)
         self.pingDatasDict.pop(pingData.fileName)
         self.pingDataFileNames.remove(pingData.fileName)
+        # If removed item was in the left column, adjust leftColumnCount
+        if idx < self.leftColumnCount:
+            self.leftColumnCount = max(0, self.leftColumnCount - 1)
         self.writeMainFile()
 
     def changePingDataOrder(self, pingDataFileNames : List[str]):
         self.pingDataFileNames = pingDataFileNames
+        self.writeMainFile()
+
+    def changePingDataOrderTwoCol(self, leftFileNames : List[str], rightFileNames : List[str]):
+        self.pingDataFileNames = leftFileNames + rightFileNames
+        self.leftColumnCount = len(leftFileNames)
         self.writeMainFile()
 
     def changePingDataTransitivity(self, pingData : PingData, transitivity : Optional[str]):

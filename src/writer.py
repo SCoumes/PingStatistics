@@ -44,12 +44,15 @@ def _getPingDataJson(pingData: PingData) -> str:
     text += "}"
     return text
 
-def writeMainFile(filePath: str, pingDataFileNames: list[str]):
+def writeMainFile(filePath: str, pingDataFileNames: list[str], twoColumns: bool = False, leftColumnCount: int = 0):
     """
     Write the main file.
     """
     with open(filePath, "w") as file:
-        text = """{ "pingDataFileNames" : [""" + ",".join(["\"" + pingDataFileName + "\"" for pingDataFileName in pingDataFileNames]) + "]}"
+        text = """{ "pingDataFileNames" : [""" + ",".join(["\"" + pingDataFileName + "\"" for pingDataFileName in pingDataFileNames]) + "]"
+        text += f',"twoColumns": {str(twoColumns).lower()}'
+        text += f',"leftColumnCount": {leftColumnCount}'
+        text += "}"
         file.write(text)
 
 def initMainFile(filePath: str):
@@ -58,4 +61,4 @@ def initMainFile(filePath: str):
     """
     os.makedirs(path.dirname(filePath), exist_ok=True)
     with open(filePath, "w") as file:
-        file.write("{ \"pingDataFileNames\" : []}")
+        file.write('{ "pingDataFileNames" : [],"twoColumns": false}')

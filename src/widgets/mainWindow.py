@@ -29,6 +29,9 @@ class MainWindow(QMainWindow):
         self.addPingStaterButton.triggered.connect(self.addPingStater)
         self.openSaveDir = toolbar.addAction("Choose save directory")
         self.openSaveDir.triggered.connect(self.chooseSaveDir)
+        self.twoColumnsButton = toolbar.addAction("Two columns")
+        self.twoColumnsButton.setCheckable(True)
+        self.twoColumnsButton.triggered.connect(self.onTwoColumnsToggled)
         self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
         self.skipRedraw = True
         self.resizeTimer = QTimer()
@@ -45,6 +48,7 @@ class MainWindow(QMainWindow):
         self.mainController.redraw()
         
     def redrawLayout(self):
+        self.twoColumnsButton.setChecked(self.mainController.getDataController().twoColumns)
         self.vlayout = QVBoxLayout()
         self.containerWidget = QWidget()
         self.containerWidget.setLayout(self.vlayout)
@@ -55,6 +59,9 @@ class MainWindow(QMainWindow):
         scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scrollArea.setWidget(self.containerWidget)
         self.setCentralWidget(scrollArea)
+
+    def onTwoColumnsToggled(self):
+        self.mainController.toggleTwoColumns()
 
     def addPingStater(self):
         self.mainController.addPingStater()

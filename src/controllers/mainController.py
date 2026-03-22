@@ -28,8 +28,13 @@ class MainController:
         return self.dataController
     
     def redraw(self):
-        self.mainWindow.pingPresenter = PingWidgetPresenter(self.getDataController().getPingDatas(), self)
+        dc = self.dataController
+        self.mainWindow.pingPresenter = PingWidgetPresenter(dc.getPingDatas(), self, twoColumns=dc.twoColumns, leftColumnCount=dc.leftColumnCount)
         self.mainWindow.redrawLayout()
+
+    def toggleTwoColumns(self):
+        self.dataController.toggleTwoColumns()
+        self.redraw()
 
     def addPingStater(self):
         """Add a new ping stater to the list of ping staters."""

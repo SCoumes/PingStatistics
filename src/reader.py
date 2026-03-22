@@ -1,5 +1,6 @@
 from typing import List, TYPE_CHECKING, Optional
 import json
+import math
 import os.path as path
 
 from src import PingData, Date
@@ -38,13 +39,18 @@ def readMainFile(fileName : str | None, dataController : 'DataController'):
     """
     if fileName == None:
         dataController.pingDataFileNames = []
+        dataController.twoColumns = False
+        dataController.leftColumnCount = 0
         return
     if not path.exists(fileName):
         initMainFile(fileName)
     with open(fileName, "r") as f:
         data = json.load(f)
-    pingDataFileNames : List[str] = data["pingDataFileNames"] 
+    pingDataFileNames : List[str] = data["pingDataFileNames"]
     dataController.pingDataFileNames = pingDataFileNames
+    dataController.twoColumns = data.get("twoColumns", False)
+    default_left = math.ceil(len(pingDataFileNames) / 2)
+    dataController.leftColumnCount = min(data.get("leftColumnCount", default_left), len(pingDataFileNames))
 
 def readSettingsFile(fileName : str, dataController : 'DataController'):
     """
